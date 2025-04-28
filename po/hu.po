@@ -2,11 +2,11 @@
 # Translators:
 # Szigeti Péter, 2021
 # Gergő Kasza, 2022
-# summoner001, 2024
+# summoner001, 2025
 # 
 msgid ""
 msgstr ""
-"Last-Translator: summoner001, 2024\n"
+"Last-Translator: summoner001, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/yay-1/teams/123732/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,7 +135,7 @@ msgstr "(Telepítve: %s)"
 
 #: pkg/query/types.go:61
 msgid "(Orphaned)"
-msgstr "(Árva)"
+msgstr "(Elárvult)"
 
 #: pkg/query/types.go:65
 msgid "(Out-of-date: %s)"
@@ -264,7 +264,7 @@ msgstr "Idegen telepített csomagok: %s"
 
 #: pkg/vcs/vcs.go:144
 msgid "Found git repo: %s"
-msgstr "Git tároló találat: %s"
+msgstr "Git-tároló találat: %s"
 
 #: vcs.go:72
 msgid "GenDB finished. No packages were installed"
@@ -316,7 +316,7 @@ msgstr "Hiányzik"
 
 #: pkg/query/aur_warnings.go:75
 msgid "Missing AUR Debug Packages:"
-msgstr "Hiányzó AUR hibakereső csomagok:"
+msgstr "Hiányzó AUR-hibakereső-csomagok:"
 
 #: print.go:31
 msgid "Name"
@@ -324,7 +324,7 @@ msgstr "Név"
 
 #: pkg/dep/dep_graph.go:442 pkg/dep/dep_graph.go:548
 msgid "No AUR package found for"
-msgstr "Nem található AUR csomag a következőhöz:"
+msgstr "Nem található AUR-csomag a következőhöz:"
 
 #: pkg/dep/dep_graph.go:182
 msgid "No package found for"
@@ -340,7 +340,7 @@ msgstr "Nem kötelező függőségek"
 
 #: pkg/query/aur_warnings.go:79
 msgid "Orphan (unmaintained) AUR Packages:"
-msgstr "Árva (nem karbantartott) AUR csomagok:"
+msgstr "Árva (nem karbantartott) AUR-csomagok:"
 
 #: print.go:53 print.go:55
 msgid "Out-of-date"
@@ -360,11 +360,11 @@ msgstr "PKGBUILD-ek szerkesztése?"
 
 #: print.go:61
 msgid "Package Base"
-msgstr "Csomag alap"
+msgstr "Csomag alapja"
 
 #: print.go:60
 msgid "Package Base ID"
-msgstr "Csomag alap ID-ja"
+msgstr "Csomag alapjának azonosítója"
 
 #: pkg/query/aur_warnings.go:71
 msgid "Packages not in AUR:"
@@ -413,7 +413,7 @@ msgstr "Tároló"
 
 #: pkg/dep/dep_graph.go:730
 msgid "Repository AUR"
-msgstr "AUR tároló"
+msgstr "AUR-tároló"
 
 #: pkg/dep/dep_graph.go:78
 msgid "SRCINFO"
@@ -433,15 +433,15 @@ msgstr "Csak a tároló csomagjainak megjelenítése"
 
 #: print.go:95
 msgid "Size of pacman cache %s: %s"
-msgstr "A pacman gyorsítótár mérete %s: %s"
+msgstr "A pacman gyorsítótárának mérete %s: %s"
 
 #: print.go:98
 msgid "Size of yay cache %s: %s"
-msgstr "A yay gyorsítótár mérete %s: %s"
+msgstr "A yay gyorsítótárának mérete %s: %s"
 
 #: print.go:62
 msgid "Snapshot URL"
-msgstr "Pillanatkép webcím"
+msgstr "Pillanatkép webcíme"
 
 #: pkg/dep/dep_graph.go:76
 msgid "Sync"
@@ -623,7 +623,7 @@ msgstr "sikerült olvasni a config fájlt „%s”: %s"
 
 #: pkg/cmd/graph/main.go:46 pkg/runtime/runtime.go:73
 msgid "failed to retrieve aur Cache"
-msgstr "nem sikerült lekérni az AUR gyorsítótárat"
+msgstr "nem sikerült lekérni az AUR gyorsítótárát"
 
 #: pkg/upgrade/sources.go:27
 msgid "ignoring package devel upgrade (no AUR info found):"
