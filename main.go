@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime/debug"
+	"strings"
 
 	"github.com/leonelquinteros/gotext"
 
@@ -27,7 +28,12 @@ func initGotext() {
 	}
 
 	if lc := os.Getenv("LANGUAGE"); lc != "" {
-		gotext.Configure(localePath, lc, "yay")
+		// Split LANGUAGE by ':' and prioritize the first locale
+		// Should fix in gotext to support this
+		locales := strings.Split(lc, ":")
+		if len(locales) > 0 && locales[0] != "" {
+			gotext.Configure(localePath, locales[0], "yay")
+		}
 	} else if lc := os.Getenv("LC_ALL"); lc != "" {
 		gotext.Configure(localePath, lc, "yay")
 	} else if lc := os.Getenv("LC_MESSAGES"); lc != "" {
