@@ -1,18 +1,34 @@
-#
+# 
 # Translators:
 # J G, 2021
-# JungHee Lee <daemul72@gmail.com>, 2023
-#
+# Junghee Lee <daemul72@gmail.com>, 2025
+# 
 msgid ""
 msgstr ""
-"Last-Translator: JungHee Lee <daemul72@gmail.com>, 2023\n"
+"Last-Translator: Junghee Lee <daemul72@gmail.com>, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/yay-1/teams/123732/ko/)\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: xgotext\n"
+
+#: clean.go:83
+msgid ""
+"\n"
+"Build directory:"
+msgstr ""
+"\n"
+"빌드 디렉터리:"
+
+#: pkg/db/ialpm/alpm.go:201 pkg/dep/dep_graph.go:740
+msgid ""
+"\n"
+"Enter a number (default=1): "
+msgstr ""
+"\n"
+"숫자를 입력하세요 (기본값=1): "
 
 #: pkg/menus/menu.go:32
 msgid " (Build Files Exist)"
@@ -50,11 +66,11 @@ msgstr "%s가 존재합니다."
 msgid "%s is up to date -- skipping"
 msgstr "%s 최신 버전임 -- 건너뛰는 중"
 
-#: pkg/upgrade/service.go:292
+#: pkg/upgrade/service.go:291
 msgid "%s to upgrade/install."
 msgstr "업그레이드/설치하려면 %s 선택합니다."
 
-#: pkg/upgrade/service.go:286
+#: pkg/upgrade/service.go:285
 msgid "%s will also be installed for this operation."
 msgstr "이 작업을 위해 %s 또한 설치됩니다."
 
@@ -84,7 +100,8 @@ msgstr "%s: 로컬 (%s) 버전이 AUR (%s)보다 높음"
 
 #: vote.go:51
 msgid ""
-"%s: please set AUR_USERNAME and AUR_PASSWORD environment variables for voting"
+"%s: please set AUR_USERNAME and AUR_PASSWORD environment variables for "
+"voting"
 msgstr "%s: 투표를 위해 AUR_USERNAME 및 AUR_PASSWORD 환경 변수를 설정하십시오"
 
 #: pkg/download/unified.go:192
@@ -96,19 +113,18 @@ msgid "(%d/%d) Downloaded PKGBUILD: %s"
 msgstr "(%d/%d) PKGBUILD 다운로드됨: %s"
 
 #: pkg/download/aur.go:82
-#, fuzzy
 msgid "(%d/%d) Failed to download PKGBUILD: %s"
-msgstr "(%d/%d) PKGBUILD 다운로드됨: %s"
+msgstr "(%d/%d) PKGBUILD 다운로드에 실패함: %s"
 
 #: pkg/sync/srcinfo/service.go:109
 msgid "(%d/%d) Parsing SRCINFO: %s"
 msgstr "(%d/%d) SRCINFO 분석하는 중: %s"
 
-#: pkg/query/types.go:72 pkg/query/types.go:103
+#: pkg/query/types.go:103 pkg/query/types.go:72
 msgid "(Installed)"
 msgstr "(설치됨)"
 
-#: pkg/query/types.go:70 pkg/query/types.go:101
+#: pkg/query/types.go:101 pkg/query/types.go:70
 msgid "(Installed: %s)"
 msgstr "(설치됨: %s)"
 
@@ -120,13 +136,13 @@ msgstr "(고립됨)"
 msgid "(Out-of-date: %s)"
 msgstr "(오래됨: %s)"
 
-#: print.go:44
-msgid "AUR URL"
-msgstr "AUR URL"
-
 #: pkg/dep/dep_graph.go:75
 msgid "AUR"
 msgstr "AUR"
+
+#: print.go:44
+msgid "AUR URL"
+msgstr "AUR URL"
 
 #: pkg/menus/edit_menu.go:58
 msgid "Add %s or %s to your environment variables"
@@ -144,7 +160,7 @@ msgstr "종속성 확인"
 msgid "Check Deps"
 msgstr "종속성 확인"
 
-#: pkg/upgrade/service.go:90
+#: pkg/upgrade/service.go:89
 msgid "Checking development packages..."
 msgstr "개발 패키지 확인하는 중..."
 
@@ -200,7 +216,7 @@ msgstr "다음으로 PKGBUILD를 편집하시겠습니까?"
 msgid "Error during AUR search: %s\n"
 msgstr "AUR 검색 중 오류: %s\n"
 
-#: pkg/upgrade/service.go:296
+#: pkg/upgrade/service.go:295
 msgid "Excluding packages may cause partial upgrades and break systems"
 msgstr "패키지를 제외하면 부분 업그레이드 및 시스템 중단이 발생할 수 있습니다."
 
@@ -229,7 +245,7 @@ msgstr "다음 패키지를 설치하지 못했습니다. 수동 개입이 필�
 msgid "First Submitted"
 msgstr "처음 제출됨"
 
-#: pkg/query/aur_warnings.go:79
+#: pkg/query/aur_warnings.go:83
 msgid "Flagged Out Of Date AUR Packages:"
 msgstr "오래된 AUR 패키지로 플래그 지정됨:"
 
@@ -285,13 +301,13 @@ msgstr "종속성 만들기"
 msgid "Make Deps"
 msgstr "종속성 만들기"
 
-#: pkg/query/aur_warnings.go:71
-msgid "Missing AUR Debug Packages:"
-msgstr "누락된 AUR 디버그 패키지:"
-
 #: pkg/dep/dep_graph.go:79
 msgid "Missing"
 msgstr "누락됨"
+
+#: pkg/query/aur_warnings.go:75
+msgid "Missing AUR Debug Packages:"
+msgstr "누락된 AUR 디버그 패키지:"
 
 #: print.go:31
 msgid "Name"
@@ -302,9 +318,8 @@ msgid "No AUR package found for"
 msgstr "다음에 대한 AUR 패키지를 찾을 수 없음"
 
 #: pkg/dep/dep_graph.go:182
-#, fuzzy
 msgid "No package found for"
-msgstr "다음에 대한 AUR 패키지를 찾을 수 없음"
+msgstr "다음 패키지를 찾을 수 없음:"
 
 #: print.go:225
 msgid "None"
@@ -314,7 +329,7 @@ msgstr "없음"
 msgid "Optional Deps"
 msgstr "선택적 종속성"
 
-#: pkg/query/aur_warnings.go:75
+#: pkg/query/aur_warnings.go:79
 msgid "Orphan (unmaintained) AUR Packages:"
 msgstr "고립 (유지 관리되지 않는) AUR 패키지:"
 
@@ -334,15 +349,15 @@ msgstr "PKGBUILD 최신 버전임, 다운로드 건너뛰는 중: %s"
 msgid "PKGBUILDs to edit?"
 msgstr "PKGBUILD를 편집하시겠습니까?"
 
-#: print.go:60
-msgid "Package Base ID"
-msgstr "패키지 베이스 ID"
-
 #: print.go:61
 msgid "Package Base"
 msgstr "패키지 베이스"
 
-#: pkg/query/aur_warnings.go:67
+#: print.go:60
+msgid "Package Base ID"
+msgstr "패키지 베이스 ID"
+
+#: pkg/query/aur_warnings.go:71
 msgid "Packages not in AUR:"
 msgstr "AUR에 없는 패키지:"
 
@@ -354,7 +369,7 @@ msgstr "cleanBuild할 패키지는 무엇인가요?"
 msgid "Packages to exclude"
 msgstr "제외할 패키지"
 
-#: pkg/upgrade/service.go:295
+#: pkg/upgrade/service.go:294
 msgid "Packages to exclude: (eg: \"1 2 3\", \"1-3\", \"^4\" or repo name)"
 msgstr "제외할 패키지: (예: \"1 2 3\", \"1-3\", \"^4\" 혹은 저장소 이름)"
 
@@ -380,25 +395,25 @@ msgstr "설치 후 make 종속성을 제거하시겠습니까?"
 
 #: print.go:43
 msgid "Replaces"
-msgstr ""
+msgstr "교체하기"
+
+#: pkg/db/ialpm/alpm.go:191 print.go:30
+msgid "Repository"
+msgstr "저장소"
 
 #: pkg/dep/dep_graph.go:730
 msgid "Repository AUR"
 msgstr "저장소 AUR"
 
-#: print.go:30 pkg/db/ialpm/alpm.go:191
-msgid "Repository"
-msgstr "저장소"
-
 #: pkg/dep/dep_graph.go:78
 msgid "SRCINFO"
 msgstr "SRCINFO"
 
-#: pkg/upgrade/service.go:72
+#: pkg/upgrade/service.go:71
 msgid "Searching AUR for updates..."
 msgstr "AUR에서 업데이트 검색하는 중..."
 
-#: pkg/upgrade/service.go:160
+#: pkg/upgrade/service.go:159
 msgid "Searching databases for updates..."
 msgstr "데이터베이스에서 업데이트 검색하는 중..."
 
@@ -432,7 +447,7 @@ msgstr "다음 패키지는 이 컴퓨터의 아키텍처와 호환되지 않음
 
 #: pkg/db/ialpm/alpm.go:179 pkg/dep/dep_graph.go:726
 msgid "There are %[1]d providers available for %[2]s:"
-msgstr "%[2]s에 사용할 수 있는 %[1]d개 공급자가 있습니다:"
+msgstr "%[2]s에 대해 %[1]d개의 의존성 충족 패키지가 있습니다:"
 
 #: pkg/settings/exe/cmd_builder.go:258
 msgid "There may be another Pacman instance running. Waiting..."
@@ -486,29 +501,13 @@ msgstr "Yay 버전 v%s"
 msgid "[N]one"
 msgstr "[N]안함"
 
-#: clean.go:83
-msgid ""
-"\n"
-"Build directory:"
-msgstr ""
-"\n"
-"빌드 디렉터리:"
-
-#: pkg/db/ialpm/alpm.go:201 pkg/dep/dep_graph.go:740
-msgid ""
-"\n"
-"Enter a number (default=1): "
-msgstr ""
-"\n"
-"숫자를 입력하세요 (기본값=1): "
-
 #: pkg/settings/errors.go:29
 msgid "aborting due to user"
-msgstr "사용자로 인해 중단됨"
+msgstr "사용자에 의해 중단됨"
 
 #: pkg/settings/parser/parser.go:608
 msgid "argument '-' specified without input on stdin"
-msgstr "stdin에 대한 입력 없이 지정된 인자 '-'"
+msgstr "stdin에 대한 입력없이 독립변수 '-' 지정됨"
 
 #: local_install.go:26
 msgid "cannot find PKGBUILD and .SRCINFO in directory"
@@ -530,11 +529,11 @@ msgstr "필요한 패키지를 모두 찾을 수 없음"
 msgid "could not find any package archives listed in %s"
 msgstr "%s에 나열된 패키지 아카이브를 찾을 수 없음"
 
-#: pkg/sync/build/errors.go:50 pkg/upgrade/service.go:287
+#: pkg/sync/build/errors.go:50 pkg/upgrade/service.go:286
 msgid "dependency"
 msgstr "종속성"
 
-#: pkg/vcs/vcs.go:96 pkg/vcs/vcs.go:100
+#: pkg/vcs/vcs.go:100 pkg/vcs/vcs.go:96
 msgid "devel check for package failed: '%s' encountered an error"
 msgstr "패키지에 대한 devel 확인 실패함: '%s'에 하나의 오류가 발생했습니다"
 
@@ -642,6 +641,10 @@ msgstr "잘못된 저장소"
 msgid "invalid value: %d is not between %d and %d"
 msgstr "잘못된 값: %d가 %d와 %d 사이에 있지 않음"
 
+#: pkg/text/input.go:48
+msgid "no"
+msgstr "아니요"
+
 #: pkg/sync/srcinfo/pgp/keys.go:110
 msgid "no keys to import"
 msgstr "가져올 키 없음"
@@ -654,10 +657,6 @@ msgstr "실행된 쿼리가 없습니다"
 msgid "no target directories specified"
 msgstr "지정된 대상 디렉터리가 없습니다"
 
-#: pkg/text/input.go:48
-msgid "no"
-msgstr "아니요"
-
 #: pkg/sync/build/installer.go:242
 msgid "nothing to install for %s"
 msgstr "%s 용으로 설치할 항목 없음"
@@ -668,7 +667,12 @@ msgstr "한번에 한 작업만 쓸 수 있음"
 
 #: pkg/cmd/graph/main.go:70
 msgid "only one target is allowed"
-msgstr ""
+msgstr "하나의 대상만 허용됩니다"
+
+#: pkg/upgrade/service.go:291
+msgid "package"
+msgid_plural "packages"
+msgstr[0] "패키지"
 
 #: print.go:187
 msgid "package '%s' was not found"
@@ -681,11 +685,6 @@ msgstr "AUR에서 패키지를 찾을 수 없습니다"
 #: pkg/download/abs.go:23
 msgid "package not found in repos"
 msgstr "저장소에서 패키지를 찾을 수 없습니다"
-
-#: pkg/upgrade/service.go:292
-msgid "package"
-msgid_plural "packages"
-msgstr[0] "패키지"
 
 #: pkg/sync/srcinfo/pgp/keys.go:100
 msgid "problem importing keys"
