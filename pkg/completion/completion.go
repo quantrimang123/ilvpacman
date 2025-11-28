@@ -1,34 +1,27 @@
 package completion
 
 import (
-	"bufio"
 	"context"
-	"fmt"
 	"io"
-	"net/http"
-	"net/url"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/Jguer/yay/v12/pkg/db"
+	"github.com/Jguer/yay/v12/pkg/download"
+	"github.com/Jguer/yay/v12/pkg/text"
 )
 
 type PkgSynchronizer interface {
 	SyncPackages(...string) []db.IPackage
 }
 
-type httpRequestDoer interface {
-	Do(req *http.Request) (*http.Response, error)
-}
-
 // Show provides completion info for shells.
-func Show(ctx context.Context, httpClient httpRequestDoer,
-	dbExecutor PkgSynchronizer, aurURL, completionPath string, interval int, force bool,
+func Show(ctx context.Context, httpClient download.HTTPRequestDoer,
+	dbExecutor PkgSynchronizer, aurURL, completionPath string, interval int, force bool, logger *text.Logger,
 ) error {
-	err := Update(ctx, httpClient, dbExecutor, aurURL, completionPath, interval, force)
+	err := Update(ctx, httpClient, dbExecutor, aurURL, completionPath, interval, force, logger)
 	if err != nil {
 		return err
 	}
@@ -45,8 +38,8 @@ func Show(ctx context.Context, httpClient httpRequestDoer,
 }
 
 // Update updates completion cache to be used by Complete.
-func Update(ctx context.Context, httpClient httpRequestDoer,
-	dbExecutor PkgSynchronizer, aurURL, completionPath string, interval int, force bool,
+func Update(ctx context.Context, httpClient download.HTTPRequestDoer,
+	dbExecutor PkgSynchronizer, aurURL, completionPath string, interval int, force bool, logger *text.Logger,
 ) error {
 	info, err := os.Stat(completionPath)
 
@@ -61,7 +54,7 @@ func Update(ctx context.Context, httpClient httpRequestDoer,
 			return errf
 		}
 
-		if createAURList(ctx, httpClient, aurURL, out) != nil {
+		if createAURList(ctx, httpClient, aurURL, out, logger) != nil {
 			defer os.Remove(completionPath)
 		}
 
@@ -75,41 +68,23 @@ func Update(ctx context.Context, httpClient httpRequestDoer,
 	return nil
 }
 
-// CreateAURList creates a new completion file.
-func createAURList(ctx context.Context, client httpRequestDoer, aurURL string, out io.Writer) error {
-	u, err := url.Parse(aurURL)
+// createAURList creates a new completion file.
+func createAURList(ctx context.Context, client download.HTTPRequestDoer, aurURL string, out io.Writer, logger *text.Logger) error {
+	scanner, err := download.GetPackageScanner(ctx, client, aurURL, logger)
 	if err != nil {
 		return err
 	}
-
-	u.Path = path.Join(u.Path, "packages.gz")
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), http.NoBody)
-	if err != nil {
-		return err
-	}
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("invalid status code: %d", resp.StatusCode)
-	}
-
-	scanner := bufio.NewScanner(resp.Body)
+	defer scanner.Close()
 
 	scanner.Scan()
 
 	for scanner.Scan() {
-		text := scanner.Text()
-		if strings.HasPrefix(text, "#") {
+		pkgName := scanner.Text()
+		if strings.HasPrefix(pkgName, "#") {
 			continue
 		}
 
-		if _, err := io.WriteString(out, text+"\tAUR\n"); err != nil {
+		if _, err := io.WriteString(out, pkgName+"\tAUR\n"); err != nil {
 			return err
 		}
 	}
