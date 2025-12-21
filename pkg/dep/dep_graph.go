@@ -423,6 +423,8 @@ func (g *Grapher) GraphFromAUR(ctx context.Context,
 
 	aurPkgsAdded := []*aurc.Pkg{}
 
+	var packagesNotFound int
+
 	for _, target := range targets {
 		if cachedProvidePkg, ok := g.providerCache[target]; ok {
 			aurPkgs = cachedProvidePkg
@@ -436,6 +438,7 @@ func (g *Grapher) GraphFromAUR(ctx context.Context,
 
 		if len(aurPkgs) == 0 {
 			g.logger.Errorln(gotext.Get("No AUR package found for"), " ", target)
+			packagesNotFound++
 
 			continue
 		}
@@ -469,6 +472,10 @@ func (g *Grapher) GraphFromAUR(ctx context.Context,
 	}
 
 	g.AddDepsForPkgs(ctx, aurPkgsAdded, graph)
+
+	if packagesNotFound == len(targets) {
+		return graph, &aur.ErrTargetNotFound{}
+	}
 
 	return graph, nil
 }
