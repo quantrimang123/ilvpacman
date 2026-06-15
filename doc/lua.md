@@ -48,6 +48,97 @@ startup and reports the offending keys/values so misconfigurations fail fast.
 A ready-to-copy example
 lives at [`doc/init.lua`](init.lua).
 
+## Logging with `yay.log`
+
+Lua config and hooks can write through yay's normal logger:
+
+```lua
+yay.log.debug("build dir:", yay.opt.build_dir)
+yay.log.info("loaded init.lua")
+yay.log.warn("skipping", "pkgname")
+yay.log.error("policy check failed")
+```
+
+`debug` only prints when debug logging is enabled. `error` logs an error-level
+message and does not stop execution; use `yay.abort("message")` for controlled
+hook stops.
+
+## Upgrade selection hooks
+
+`UpgradeSelect` runs during `yay -Syu` after yay has built and sorted the
+upgrade graph, and before the native "Packages to exclude" menu is printed.
+The hook can return package names to exclude. By default, yay still shows the
+native menu after applying hook exclusions.
+
+```lua
+yay.create_autocmd("UpgradeSelect", {
+  desc = "skip recently modified AUR upgrades",
+  callback = function(event)
+    local exclude = {}
+    local recent_cutoff = os.time() - (3 * 24 * 60 * 60)
+    for _, pkg in ipairs(event.data.upgrades) do
+      if pkg.repository == "aur" and pkg.last_modified >= recent_cutoff then
+        yay.log.debug("pre-excluding recently modified AUR package:", pkg.name)
+        table.insert(exclude, pkg.name)
+      end
+    end
+
+    return { exclude = exclude, skip_menu = true }
+  end,
+})
+```
+
+Multiple `UpgradeSelect` hooks run in registration order. Their `exclude`
+lists are unioned. If any hook returns `skip_menu = true`, yay applies all hook
+exclusions and skips the native menu. With `skip_menu = false` or no return
+value, hook exclusions are applied first and then the native menu is shown.
+
+Returned exclusions must name packages from `event.data.upgrades`. Unknown
+names are treated as hook errors so typos do not silently upgrade the wrong
+package. Pulled dependencies are visible in `event.data.pulled_dependencies`,
+but they are removed only when pruning an excluded upgrade candidate requires
+it.
+
+### UpgradeSelect event
+
+The callback receives this table:
+
+```lua
+{
+  event = "UpgradeSelect",
+  data = {
+    upgrades = {
+      {
+        id = 3,
+        name = "pkgname",
+        base = "pkgbase",
+        repository = "aur",
+        local_version = "1.2.3-3",
+        remote_version = "1.2.3-4",
+        reason = "explicit",
+        last_modified = 1700000000,
+      },
+    },
+    pulled_dependencies = {
+      {
+        id = 0,
+        name = "depname",
+        base = "",
+        repository = "core",
+        local_version = "",
+        remote_version = "1.0-1",
+        reason = "dependency",
+        last_modified = 0,
+      },
+    },
+  },
+}
+```
+
+For selectable `data.upgrades` entries, `id` matches the number shown in the
+native menu. `pulled_dependencies` entries are shown separately by yay and use
+`id = 0` because they are not directly selectable.
+
 ## AUR pre-install hooks
 
 `init.lua` can register hooks with a small autocmd API:
@@ -134,6 +225,7 @@ yay.create_autocmd("AURPreInstall", {
   desc = "block forbidden sources and patch a PKGBUILD",
   callback = function(event)
     if event.data.pkgbuild:match("forbidden.example") then
+      yay.log.warn(event.match .. ": forbidden source URL")
       yay.abort(event.match .. ": forbidden source URL")
     end
 
