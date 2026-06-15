@@ -14,17 +14,24 @@ const (
 )
 
 type Engine struct {
-	L *lua.LState
+	L        *lua.LState
+	autocmds map[string][]Autocmd
 }
 
 func New() *Engine {
 	state := lua.NewState()
+	engine := &Engine{
+		L:        state,
+		autocmds: make(map[string][]Autocmd),
+	}
 
 	yayTbl := state.NewTable()
 	state.SetGlobal(globalName, yayTbl)
 	state.SetField(yayTbl, optTableName, state.NewTable())
+	state.SetField(yayTbl, "abort", state.NewFunction(abort))
+	state.SetField(yayTbl, "create_autocmd", state.NewFunction(engine.createAutocmd))
 
-	return &Engine{L: state}
+	return engine
 }
 
 func (e *Engine) Close() {
