@@ -1,5 +1,4 @@
 //go:build !integration
-// +build !integration
 
 package main
 
@@ -14,10 +13,10 @@ import (
 	"github.com/stretchr/testify/require"
 	gock "gopkg.in/h2non/gock.v1"
 
-	"github.com/Jguer/yay/v12/pkg/db"
-	mockaur "github.com/Jguer/yay/v12/pkg/dep/mock"
-	"github.com/Jguer/yay/v12/pkg/settings/parser"
-	"github.com/Jguer/yay/v12/pkg/text"
+	"github.com/Jguer/yay/v13/pkg/db"
+	mockaur "github.com/Jguer/yay/v13/pkg/dep/mock"
+	"github.com/Jguer/yay/v13/pkg/settings/parser"
+	"github.com/Jguer/yay/v13/pkg/text"
 )
 
 func TestPrintPkgbuilds(t *testing.T) {
@@ -43,7 +42,6 @@ func TestPrintPkgbuilds(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			defer gock.Off()
 			gock.New("https://aur.archlinux.org").

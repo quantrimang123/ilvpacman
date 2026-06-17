@@ -5,24 +5,25 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
 	"github.com/leonelquinteros/gotext"
 
-	"github.com/Jguer/yay/v12/pkg/completion"
-	"github.com/Jguer/yay/v12/pkg/db"
-	"github.com/Jguer/yay/v12/pkg/download"
-	"github.com/Jguer/yay/v12/pkg/intrange"
-	"github.com/Jguer/yay/v12/pkg/news"
-	"github.com/Jguer/yay/v12/pkg/query"
-	"github.com/Jguer/yay/v12/pkg/runtime"
-	"github.com/Jguer/yay/v12/pkg/settings"
-	"github.com/Jguer/yay/v12/pkg/settings/exe"
-	"github.com/Jguer/yay/v12/pkg/settings/parser"
-	"github.com/Jguer/yay/v12/pkg/text"
-	"github.com/Jguer/yay/v12/pkg/upgrade"
-	"github.com/Jguer/yay/v12/pkg/vcs"
+	"github.com/Jguer/yay/v13/pkg/completion"
+	"github.com/Jguer/yay/v13/pkg/db"
+	"github.com/Jguer/yay/v13/pkg/download"
+	"github.com/Jguer/yay/v13/pkg/intrange"
+	"github.com/Jguer/yay/v13/pkg/news"
+	"github.com/Jguer/yay/v13/pkg/query"
+	"github.com/Jguer/yay/v13/pkg/runtime"
+	"github.com/Jguer/yay/v13/pkg/settings"
+	"github.com/Jguer/yay/v13/pkg/settings/exe"
+	"github.com/Jguer/yay/v13/pkg/settings/parser"
+	"github.com/Jguer/yay/v13/pkg/text"
+	"github.com/Jguer/yay/v13/pkg/upgrade"
+	"github.com/Jguer/yay/v13/pkg/vcs"
 )
 
 func usage(logger *text.Logger) {
@@ -412,8 +413,8 @@ func syncList(ctx context.Context, run *runtime.Runtime,
 ) error {
 	aur := false
 
-	for i := len(cmdArgs.Targets) - 1; i >= 0; i-- {
-		if cmdArgs.Targets[i] == "aur" && run.Cfg.Mode.AtLeastAUR() {
+	for i, v := range slices.Backward(cmdArgs.Targets) {
+		if v == "aur" && run.Cfg.Mode.AtLeastAUR() {
 			cmdArgs.Targets = append(cmdArgs.Targets[:i], cmdArgs.Targets[i+1:]...)
 			aur = true
 		}

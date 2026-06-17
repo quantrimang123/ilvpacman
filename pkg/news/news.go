@@ -7,10 +7,11 @@ import (
 	"html"
 	"io"
 	"net/http"
+	"slices"
 	"strings"
 	"time"
 
-	"github.com/Jguer/yay/v12/pkg/text"
+	"github.com/Jguer/yay/v13/pkg/text"
 )
 
 type item struct {
@@ -86,8 +87,8 @@ func PrintNewsFeed(ctx context.Context, client *http.Client, logger *text.Logger
 	}
 
 	if bottomUp {
-		for i := len(rssGot.Channel.Items) - 1; i >= 0; i-- {
-			rssGot.Channel.Items[i].printNews(logger, cutOffDate, all, quiet)
+		for _, v := range slices.Backward(rssGot.Channel.Items) {
+			v.printNews(logger, cutOffDate, all, quiet)
 		}
 	} else {
 		for i := 0; i < len(rssGot.Channel.Items); i++ {

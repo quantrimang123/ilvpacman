@@ -1,5 +1,4 @@
 //go:build !integration
-// +build !integration
 
 package workdir
 
@@ -14,10 +13,10 @@ import (
 	"github.com/stretchr/testify/require"
 	glua "github.com/yuin/gopher-lua"
 
-	"github.com/Jguer/yay/v12/pkg/dep"
-	"github.com/Jguer/yay/v12/pkg/runtime"
-	"github.com/Jguer/yay/v12/pkg/settings"
-	settingslua "github.com/Jguer/yay/v12/pkg/settings/lua"
+	"github.com/Jguer/yay/v13/pkg/dep"
+	"github.com/Jguer/yay/v13/pkg/runtime"
+	"github.com/Jguer/yay/v13/pkg/settings"
+	settingslua "github.com/Jguer/yay/v13/pkg/settings/lua"
 )
 
 func TestAURPreInstallEventsFromPackageFiles(t *testing.T) {
@@ -115,8 +114,8 @@ func TestRunAURPreInstallLuaHooksRunsBasesInSortedOrder(t *testing.T) {
 		mapset.NewThreadUnsafeSet[string](),
 		[]map[string]*dep.InstallInfo{
 			{
-				"a": {Source: dep.AUR, AURBase: ptrString("a-base")},
-				"z": {Source: dep.AUR, AURBase: ptrString("z-base")},
+				"a": {Source: dep.AUR, AURBase: new("a-base")},
+				"z": {Source: dep.AUR, AURBase: new("z-base")},
 			},
 		})
 	require.NoError(t, err)
@@ -233,8 +232,4 @@ pkgname = demo-doc
 `), 0o600))
 
 	return dir
-}
-
-func ptrString(s string) *string {
-	return &s
 }

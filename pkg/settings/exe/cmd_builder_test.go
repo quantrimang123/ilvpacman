@@ -1,5 +1,4 @@
 //go:build !integration
-// +build !integration
 
 package exe
 
@@ -12,8 +11,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/Jguer/yay/v12/pkg/settings/parser"
-	"github.com/Jguer/yay/v12/pkg/text"
+	"github.com/Jguer/yay/v13/pkg/settings/parser"
+	"github.com/Jguer/yay/v13/pkg/text"
 )
 
 func TestBuildGitCmd(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"maps"
 	"slices"
 
-	"github.com/Jguer/yay/v12/pkg/dep"
-	settingslua "github.com/Jguer/yay/v12/pkg/settings/lua"
+	"github.com/Jguer/yay/v13/pkg/dep"
+	settingslua "github.com/Jguer/yay/v13/pkg/settings/lua"
 )
 
 // postInstallEvent flattens the resolved topo layers into the PostInstall
@@ -14,9 +14,7 @@ import (
 func postInstallEvent(targets []map[string]*dep.InstallInfo, failedAndIgnored map[string]error) *settingslua.PostInstallEvent {
 	merged := map[string]*dep.InstallInfo{}
 	for _, layer := range targets {
-		for name, info := range layer {
-			merged[name] = info
-		}
+		maps.Copy(merged, layer)
 	}
 
 	names := slices.Sorted(maps.Keys(merged))

@@ -1,5 +1,4 @@
 //go:build !integration
-// +build !integration
 
 package completion
 
@@ -15,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Jguer/yay/v12/pkg/db"
-	"github.com/Jguer/yay/v12/pkg/db/mock"
+	"github.com/Jguer/yay/v13/pkg/db"
+	"github.com/Jguer/yay/v13/pkg/db/mock"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

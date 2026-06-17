@@ -1,5 +1,4 @@
 //go:build !integration
-// +build !integration
 
 package upgrade
 
@@ -15,23 +14,19 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/Jguer/yay/v12/pkg/db"
-	"github.com/Jguer/yay/v12/pkg/db/mock"
-	"github.com/Jguer/yay/v12/pkg/dep"
-	"github.com/Jguer/yay/v12/pkg/dep/topo"
-	"github.com/Jguer/yay/v12/pkg/query"
-	"github.com/Jguer/yay/v12/pkg/settings"
-	settingslua "github.com/Jguer/yay/v12/pkg/settings/lua"
-	"github.com/Jguer/yay/v12/pkg/settings/parser"
-	"github.com/Jguer/yay/v12/pkg/text"
-	"github.com/Jguer/yay/v12/pkg/vcs"
+	"github.com/Jguer/yay/v13/pkg/db"
+	"github.com/Jguer/yay/v13/pkg/db/mock"
+	"github.com/Jguer/yay/v13/pkg/dep"
+	"github.com/Jguer/yay/v13/pkg/dep/topo"
+	"github.com/Jguer/yay/v13/pkg/query"
+	"github.com/Jguer/yay/v13/pkg/settings"
+	settingslua "github.com/Jguer/yay/v13/pkg/settings/lua"
+	"github.com/Jguer/yay/v13/pkg/settings/parser"
+	"github.com/Jguer/yay/v13/pkg/text"
+	"github.com/Jguer/yay/v13/pkg/vcs"
 
-	mockaur "github.com/Jguer/yay/v12/pkg/dep/mock"
+	mockaur "github.com/Jguer/yay/v13/pkg/dep/mock"
 )
-
-func ptrString(s string) *string {
-	return &s
-}
 
 func newUpgradeSelectTestService(input io.Reader, luaEngine *settingslua.Engine) *UpgradeService {
 	logger := text.NewLogger(io.Discard, io.Discard, input, true, "test")
@@ -57,7 +52,7 @@ func newUpgradeSelectTestGraph(t *testing.T) *topo.Graph[string, *dep.InstallInf
 		Value: &dep.InstallInfo{
 			Reason:       dep.Explicit,
 			Source:       dep.Sync,
-			SyncDBName:   ptrString("core"),
+			SyncDBName:   new("core"),
 			LocalVersion: "1.0",
 			Version:      "2.0",
 			Upgrade:      true,
@@ -69,7 +64,7 @@ func newUpgradeSelectTestGraph(t *testing.T) *topo.Graph[string, *dep.InstallInf
 		Value: &dep.InstallInfo{
 			Reason:       dep.Explicit,
 			Source:       dep.AUR,
-			AURBase:      ptrString("yay"),
+			AURBase:      new("yay"),
 			LocalVersion: "1.0",
 			Version:      "2.0",
 			Upgrade:      true,
@@ -84,7 +79,7 @@ func newUpgradeSelectTestGraph(t *testing.T) *topo.Graph[string, *dep.InstallInf
 		Value: &dep.InstallInfo{
 			Reason:       dep.Explicit,
 			Source:       dep.AUR,
-			AURBase:      ptrString("example"),
+			AURBase:      new("example"),
 			LocalVersion: "1.0",
 			Version:      "2.0",
 			Upgrade:      true,
@@ -95,7 +90,7 @@ func newUpgradeSelectTestGraph(t *testing.T) *topo.Graph[string, *dep.InstallInf
 		Value: &dep.InstallInfo{
 			Reason:     dep.Dep,
 			Source:     dep.Sync,
-			SyncDBName: ptrString("core"),
+			SyncDBName: new("core"),
 			Version:    "1.0",
 			Upgrade:    true,
 		},
@@ -112,7 +107,7 @@ func TestUpgradeService_GraphUpgrades(t *testing.T) {
 		AURBase:      nil,
 		LocalVersion: "4.5.0-1",
 		Version:      "5.0.0-1",
-		SyncDBName:   ptrString("core"),
+		SyncDBName:   new("core"),
 		Upgrade:      true,
 		Devel:        false,
 	}
@@ -120,7 +115,7 @@ func TestUpgradeService_GraphUpgrades(t *testing.T) {
 	exampleDepInfoDevel := &dep.InstallInfo{
 		Source:       dep.AUR,
 		Reason:       dep.Dep,
-		AURBase:      ptrString("example"),
+		AURBase:      new("example"),
 		LocalVersion: "2.2.1.r32.41baa362-1",
 		Version:      "latest-commit",
 		Upgrade:      true,
@@ -131,7 +126,7 @@ func TestUpgradeService_GraphUpgrades(t *testing.T) {
 	newDepInfo := &dep.InstallInfo{
 		Source:       dep.Sync,
 		Reason:       dep.Dep,
-		SyncDBName:   ptrString("core"),
+		SyncDBName:   new("core"),
 		Version:      "3.0.1-2",
 		LocalVersion: "",
 		Upgrade:      true,
@@ -141,7 +136,7 @@ func TestUpgradeService_GraphUpgrades(t *testing.T) {
 	exampleDepInfoAUR := &dep.InstallInfo{
 		Source:       dep.AUR,
 		Reason:       dep.Dep,
-		AURBase:      ptrString("example"),
+		AURBase:      new("example"),
 		LocalVersion: "2.2.1.r32.41baa362-1",
 		Version:      "2.2.1.r69.g8a10460-1",
 		Upgrade:      true,
@@ -152,7 +147,7 @@ func TestUpgradeService_GraphUpgrades(t *testing.T) {
 	yayDepInfo := &dep.InstallInfo{
 		Reason:       dep.Explicit,
 		Source:       dep.AUR,
-		AURBase:      ptrString("yay"),
+		AURBase:      new("yay"),
 		LocalVersion: "10.2.3",
 		Version:      "10.2.4",
 		Upgrade:      true,
@@ -470,7 +465,7 @@ func TestUpgradeService_GraphUpgradesMissingDep(t *testing.T) {
 	exampleDepInfoAUR := &dep.InstallInfo{
 		Source:       dep.AUR,
 		Reason:       dep.Dep,
-		AURBase:      ptrString("example"),
+		AURBase:      new("example"),
 		LocalVersion: "2.2.1.r32.41baa362-1",
 		Version:      "2.2.1.r69.g8a10460-1",
 		Upgrade:      true,
@@ -480,7 +475,7 @@ func TestUpgradeService_GraphUpgradesMissingDep(t *testing.T) {
 	yayDepInfo := &dep.InstallInfo{
 		Reason:       dep.Explicit,
 		Source:       dep.AUR,
-		AURBase:      ptrString("yay"),
+		AURBase:      new("yay"),
 		LocalVersion: "10.2.3",
 		Version:      "10.2.4",
 		Upgrade:      true,
@@ -956,7 +951,7 @@ func TestUpgradeService_GraphUpgrades_zfs_dkms(t *testing.T) {
 	zfsDKMSInfo := &dep.InstallInfo{
 		Reason:       dep.Explicit,
 		Source:       dep.AUR,
-		AURBase:      ptrString("zfs-dkms"),
+		AURBase:      new("zfs-dkms"),
 		LocalVersion: "2.1.10-1",
 		Version:      "2.1.11-1",
 		Upgrade:      true,
@@ -966,7 +961,7 @@ func TestUpgradeService_GraphUpgrades_zfs_dkms(t *testing.T) {
 	zfsUtilsInfo := &dep.InstallInfo{
 		Reason:       dep.Dep,
 		Source:       dep.AUR,
-		AURBase:      ptrString("zfs-utils"),
+		AURBase:      new("zfs-utils"),
 		LocalVersion: "2.1.10-1",
 		Version:      "2.1.11-1",
 		Upgrade:      true,

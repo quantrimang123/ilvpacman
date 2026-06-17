@@ -1,5 +1,4 @@
 //go:build !integration
-// +build !integration
 
 package sync
 
@@ -8,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Jguer/yay/v12/pkg/dep"
-	settingslua "github.com/Jguer/yay/v12/pkg/settings/lua"
+	"github.com/Jguer/yay/v13/pkg/dep"
+	settingslua "github.com/Jguer/yay/v13/pkg/settings/lua"
 )
 
 func TestPostInstallEvent(t *testing.T) {
