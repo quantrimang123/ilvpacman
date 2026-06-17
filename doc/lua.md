@@ -327,9 +327,6 @@ logs the message but cannot roll back anything.
         local_version = "1.0.0-1",    -- previously installed ("" if not installed)
         source        = "aur",        -- "aur" | "sync" | "local" | "srcinfo" | "missing"
         reason        = "explicit",   -- "explicit" | "dependency" | "make_dependency" | "check_dependency" | "unknown"
-        installed     = true,         -- false for AUR bases that failed but were tolerated
-        upgrade       = false,        -- true when replacing an older version
-        devel         = false,        -- true for VCS (-git/-svn/…) packages
       },
       -- one entry per package yay resolved; sorted alphabetically
     },
@@ -349,13 +346,10 @@ yay.create_autocmd("PostInstall", {
   desc = "log every package yay installed",
   callback = function(event)
     for _, pkg in ipairs(event.data.packages) do
-      if pkg.installed then
-        yay.log.info(pkg.name .. " " .. pkg.version .. " installed (" .. pkg.source .. ")")
-      end
+      yay.log.info(pkg.name .. " " .. pkg.version .. " (" .. pkg.source .. ")")
     end
   end,
 })
-```
 
 ---
 
@@ -389,7 +383,6 @@ the **unfiltered** results are shown rather than aborting the command.
         popularity      = 1.23,       -- -1 for sync packages
         first_submitted = 1700000000, -- -1 for sync packages
         last_modified   = 1700000001, -- -1 for sync packages
-        provides        = { "virtual-pkg" },
       },
       -- …
     },

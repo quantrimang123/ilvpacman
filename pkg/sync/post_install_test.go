@@ -17,15 +17,13 @@ func TestPostInstallEvent(t *testing.T) {
 	base := "aur-base"
 	targets := []map[string]*dep.InstallInfo{
 		{
-			// Layer 0: two AUR packages, one of which will fail.
+			// Layer 0: two AUR packages.
 			"pkgA": {
 				Source:       dep.AUR,
 				Reason:       dep.Explicit,
 				Version:      "2.0-1",
 				LocalVersion: "1.0-1",
 				AURBase:      &base,
-				Upgrade:      true,
-				Devel:        false,
 			},
 			"pkgB": {
 				Source:       dep.AUR,
@@ -33,8 +31,6 @@ func TestPostInstallEvent(t *testing.T) {
 				Version:      "1.1-1",
 				LocalVersion: "",
 				AURBase:      &base,
-				Upgrade:      false,
-				Devel:        true,
 			},
 		},
 		{
@@ -43,8 +39,6 @@ func TestPostInstallEvent(t *testing.T) {
 				Source:  dep.Sync,
 				Reason:  dep.MakeDep,
 				Version: "3.0-1",
-				Upgrade: false,
-				Devel:   false,
 			},
 			// pkgA appears in layer 1 too; layer merge last-wins → this version.
 			"pkgA": {
@@ -53,18 +47,11 @@ func TestPostInstallEvent(t *testing.T) {
 				Version:      "2.0-2",
 				LocalVersion: "1.0-1",
 				AURBase:      &base,
-				Upgrade:      true,
-				Devel:        false,
 			},
 		},
 	}
 
-	// pkgB failed to install.
-	failedAndIgnored := map[string]error{
-		"pkgB": assert.AnError,
-	}
-
-	event := postInstallEvent(targets, failedAndIgnored)
+	event := postInstallEvent(targets)
 
 	// Must be sorted by name.
 	want := &settingslua.PostInstallEvent{
@@ -75,9 +62,6 @@ func TestPostInstallEvent(t *testing.T) {
 				LocalVersion: "1.0-1",
 				Source:       "aur",
 				Reason:       "explicit",
-				Installed:    true,
-				Upgrade:      true,
-				Devel:        false,
 			},
 			{
 				Name:         "pkgB",
@@ -85,18 +69,12 @@ func TestPostInstallEvent(t *testing.T) {
 				LocalVersion: "",
 				Source:       "aur",
 				Reason:       "dependency",
-				Installed:    false, // in failedAndIgnored
-				Upgrade:      false,
-				Devel:        true,
 			},
 			{
-				Name:      "pkgC",
-				Version:   "3.0-1",
-				Source:    "sync",
-				Reason:    "make_dependency",
-				Installed: true,
-				Upgrade:   false,
-				Devel:     false,
+				Name:    "pkgC",
+				Version: "3.0-1",
+				Source:  "sync",
+				Reason:  "make_dependency",
 			},
 		},
 	}
