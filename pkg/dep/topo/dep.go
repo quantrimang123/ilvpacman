@@ -2,7 +2,6 @@ package topo
 
 import (
 	"fmt"
-	"maps"
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
@@ -90,9 +89,7 @@ func (g *Graph[T, V]) Len() int {
 
 // Exists reports whether node exists in the graph's node set.
 func (g *Graph[T, V]) Exists(node T) bool {
-	_, ok := g.nodes[node]
-
-	return ok
+	return g.nodes[node]
 }
 
 // AddNode adds node to the graph. It is safe to call multiple times.
@@ -129,11 +126,7 @@ func (g *Graph[T, V]) AddProvides(provides T, depInfo *alpm.Depend, node T) {
 // the zero value of V.
 func (g *Graph[T, V]) ForEach(f CheckFn[T, V]) error {
 	for node := range g.nodes {
-		var v V
-		if info := g.nodeInfo[node]; info != nil {
-			v = info.Value
-		}
-		if err := f(node, v); err != nil {
+		if err := f(node, g.nodeValue(node)); err != nil {
 			return err
 		}
 	}
@@ -161,7 +154,7 @@ func (g *Graph[T, V]) DependOn(child, parent T) error {
 		return ErrSelfReferential
 	}
 
-	if g.DependsOn(parent, child) {
+	if g.Exists(child) && g.DependsOn(parent, child) {
 		return ErrCircular
 	}
 
@@ -212,36 +205,39 @@ func (g *Graph[T, V]) String() string {
 
 // DependsOn reports whether child depends (transitively) on parent.
 func (g *Graph[T, V]) DependsOn(child, parent T) bool {
-	deps := g.Dependencies(child)
-	_, ok := deps[parent]
+	return g.reachable(child, parent, g.ImmediateDependencies)
+}
 
-	return ok
+func (g *Graph[T, V]) reachable(start, target T, nextFn func(T) NodeSet[T]) bool {
+	if !g.nodes[start] {
+		return false
+	}
+
+	visited := make(NodeSet[T])
+	stack := []T{start}
+
+	for len(stack) > 0 {
+		node := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		for next := range nextFn(node) {
+			if next == target {
+				return true
+			}
+
+			if !visited[next] {
+				visited[next] = true
+				stack = append(stack, next)
+			}
+		}
+	}
+
+	return false
 }
 
 // HasDependent reports whether parent has dependent as a (transitive) dependent.
 func (g *Graph[T, V]) HasDependent(parent, dependent T) bool {
-	deps := g.Dependents(parent)
-	_, ok := deps[dependent]
-
-	return ok
-}
-
-// leavesMap returns a map of leaves with the node as key and the node info value as value.
-func (g *Graph[T, V]) leavesMap() map[T]V {
-	leaves := make(map[T]V, 0)
-
-	for node := range g.nodes {
-		if _, ok := g.dependencies[node]; !ok {
-			nodeInfo := g.GetNodeInfo(node)
-			if nodeInfo == nil {
-				nodeInfo = &NodeInfo[V]{}
-			}
-
-			leaves[node] = nodeInfo.Value
-		}
-	}
-
-	return leaves
+	return g.Dependents(parent)[dependent]
 }
 
 // TopoSortedLayers returns a slice of all of the graph nodes in topological sort order with their node info.
@@ -258,42 +254,65 @@ func (g *Graph[T, V]) leavesMap() map[T]V {
 func (g *Graph[T, V]) TopoSortedLayers(checkFn CheckFn[T, V]) []map[T]V {
 	layers := []map[T]V{}
 
-	// Copy the graph
-	shrinkingGraph := g.clone()
+	pending := make(map[T]int, len(g.nodes))
+	for node := range g.nodes {
+		pending[node] = len(g.dependencies[node])
+	}
 
-	for {
-		leaves := shrinkingGraph.leavesMap()
-		if len(leaves) == 0 {
-			break
+	current := make(map[T]V)
+	for node, deg := range pending {
+		if deg == 0 {
+			current[node] = g.nodeValue(node)
 		}
+	}
 
-		layers = append(layers, leaves)
+	for len(current) > 0 {
+		layers = append(layers, current)
 
-		for leafNode := range leaves {
+		next := map[T]V{}
+		for node := range current {
 			if checkFn != nil {
-				if err := checkFn(leafNode, leaves[leafNode]); err != nil {
+				if err := checkFn(node, current[node]); err != nil {
 					return nil
 				}
 			}
-			shrinkingGraph.remove(leafNode)
+
+			// Emitting node frees each of its dependents by one dependency.
+			for dependent := range g.dependents[node] {
+				pending[dependent]--
+				if pending[dependent] == 0 {
+					next[dependent] = g.nodeValue(dependent)
+				}
+			}
 		}
+
+		current = next
 	}
 
 	return layers
 }
 
+func (g *Graph[T, V]) nodeValue(node T) V {
+	if info := g.nodeInfo[node]; info != nil {
+		return info.Value
+	}
+
+	var zero V
+
+	return zero
+}
+
 // returns if it was the last
 func (dm DepMap[T]) remove(key, node T) bool {
-	if nodes := dm[key]; len(nodes) == 1 {
-		// The only element in the nodeset must be `node`, so we
-		// can delete the entry entirely.
+	nodes := dm[key]
+	if len(nodes) == 1 {
 		delete(dm, key)
 		return true
-	} else {
-		// Otherwise, remove the single node from the nodeset.
-		delete(nodes, node)
-		return false
 	}
+
+	delete(nodes, node)
+
+	return false
 }
 
 // Prune removes the node,
@@ -329,25 +348,6 @@ func (g *Graph[T, V]) Prune(node T) []T {
 	return pruned
 }
 
-func (g *Graph[T, V]) remove(node T) {
-	// Remove edges from things that depend on `node`.
-	for dependent := range g.dependents[node] {
-		g.dependencies.remove(dependent, node)
-	}
-
-	delete(g.dependents, node)
-
-	// Remove all edges from node to the things it depends on.
-	for dependency := range g.dependencies[node] {
-		g.dependents.remove(dependency, node)
-	}
-
-	delete(g.dependencies, node)
-
-	// Finally, remove the node itself.
-	delete(g.nodes, node)
-}
-
 // Dependencies returns all transitive dependencies of child (excluding child itself).
 // The returned set is nil if child is not present in the graph.
 func (g *Graph[T, V]) Dependencies(child T) NodeSet[T] {
@@ -370,15 +370,6 @@ func (g *Graph[T, V]) Dependents(parent T) NodeSet[T] {
 // The returned set is nil if node has no direct dependents (or is not present).
 func (g *Graph[T, V]) ImmediateDependents(node T) NodeSet[T] {
 	return g.dependents[node]
-}
-
-func (g *Graph[T, V]) clone() *Graph[T, V] {
-	return &Graph[T, V]{
-		dependencies: g.dependencies.copy(),
-		dependents:   g.dependents.copy(),
-		nodes:        g.nodes.copy(),
-		nodeInfo:     g.nodeInfo, // not copied, as it is not modified
-	}
 }
 
 // buildTransitive starts at `root` and continues calling `nextFn` to keep discovering more nodes until
@@ -413,22 +404,6 @@ func (g *Graph[T, V]) buildTransitive(root T, nextFn func(T) NodeSet[T]) NodeSet
 		// avoiding any aliasing while we range over searchNext and append
 		// to discovered in the same iteration.
 		searchNext, discovered = discovered, searchNext
-	}
-
-	return out
-}
-
-func (s NodeSet[T]) copy() NodeSet[T] {
-	out := make(NodeSet[T], len(s))
-	maps.Copy(out, s)
-
-	return out
-}
-
-func (dm DepMap[T]) copy() DepMap[T] {
-	out := make(DepMap[T], len(dm))
-	for k := range dm {
-		out[k] = dm[k].copy()
 	}
 
 	return out

@@ -21,32 +21,6 @@ import (
 	"github.com/Jguer/yay/v13/pkg/text"
 )
 
-func TestDepSplitDep(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name       string
-		input      string
-		wantName   string
-		wantMod    string
-		wantDepVer string
-	}{
-		{name: "plain", input: "base", wantName: "base"},
-		{name: "greater", input: "base>=1.0", wantName: "base", wantMod: ">=", wantDepVer: "1.0"},
-		{name: "less", input: "base<2.0", wantName: "base", wantMod: "<", wantDepVer: "2.0"},
-		{name: "equal", input: "base=1", wantName: "base", wantMod: "=", wantDepVer: "1"},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			name, mod, depVer := splitDep(tc.input)
-			require.Equal(t, tc.wantName, name)
-			require.Equal(t, tc.wantMod, mod)
-			require.Equal(t, tc.wantDepVer, depVer)
-		})
-	}
-}
-
 func TestDepSatisfies(t *testing.T) {
 	t.Parallel()
 

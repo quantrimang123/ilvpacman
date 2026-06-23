@@ -1,33 +1,9 @@
 package dep
 
 import (
-	"strings"
-
 	"github.com/Jguer/yay/v13/pkg/db"
 	aur "github.com/Jguer/yay/v13/pkg/query"
 )
-
-func splitDep(dep string) (pkg, mod, ver string) {
-	split := strings.FieldsFunc(dep, func(c rune) bool {
-		match := c == '>' || c == '<' || c == '='
-
-		if match {
-			mod += string(c)
-		}
-
-		return match
-	})
-
-	if len(split) == 0 {
-		return "", "", ""
-	}
-
-	if len(split) == 1 {
-		return split[0], "", ""
-	}
-
-	return split[0], mod, split[1]
-}
 
 func pkgSatisfies(name, version, dep string) bool {
 	depName, depMod, depVersion := splitDep(dep)

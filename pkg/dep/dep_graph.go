@@ -486,21 +486,19 @@ func (g *Grapher) GraphFromAUR(ctx context.Context,
 	return graph, nil
 }
 
-// Removes found deps from the deps mapset and returns the found deps.
 func (g *Grapher) findDepsFromAUR(ctx context.Context,
 	graph *topo.Graph[string, *InstallInfo],
 	parentPkgName string,
-	deps mapset.Set[string],
-) []aurc.Pkg {
-	pkgsToAdd := make([]aurc.Pkg, 0, deps.Cardinality())
-	if deps.Cardinality() == 0 {
-		return []aurc.Pkg{}
+	deps []string,
+) (pkgsToAdd []aurc.Pkg, missing []string) {
+	if len(deps) == 0 {
+		return nil, nil
 	}
 
-	depsSlice := deps.ToSlice()
+	pkgsToAdd = make([]aurc.Pkg, 0, len(deps))
 
-	missingNeedles := make([]string, 0, deps.Cardinality())
-	for _, depString := range depsSlice {
+	missingNeedles := make([]string, 0, len(deps))
+	for _, depString := range deps {
 		if _, ok := g.providerCache[depString]; !ok {
 			depName, _, _ := splitDep(depString)
 			missingNeedles = append(missingNeedles, depName)
@@ -521,7 +519,7 @@ func (g *Grapher) findDepsFromAUR(ctx context.Context,
 		for i := range aurPkgs {
 			pkg := &aurPkgs[i]
 			// Cache by the full depString (including version) for each dep whose name matches
-			for _, depString := range depsSlice {
+			for _, depString := range deps {
 				depName, _, _ := splitDep(depString)
 				if depName == pkg.Name {
 					g.providerCache[depString] = append(g.providerCache[depString], *pkg)
@@ -534,7 +532,7 @@ func (g *Grapher) findDepsFromAUR(ctx context.Context,
 				}
 				// Also check provides against versioned deps
 				provideName, _, _ := splitDep(val)
-				for _, depString := range depsSlice {
+				for _, depString := range deps {
 					depName, _, _ := splitDep(depString)
 					if depName == provideName {
 						g.providerCache[depString] = append(g.providerCache[depString], *pkg)
@@ -544,7 +542,7 @@ func (g *Grapher) findDepsFromAUR(ctx context.Context,
 		}
 	}
 
-	for _, depString := range depsSlice {
+	for _, depString := range deps {
 		var aurPkgs []aurc.Pkg
 		depName, _, _ := splitDep(depString)
 
@@ -587,6 +585,8 @@ func (g *Grapher) findDepsFromAUR(ctx context.Context,
 			requiredByStr := strings.Join(requiredBySlice, ", ")
 			g.logger.Errorln(gotext.Get("No AUR package found for"), " ", depString, " (", gotext.Get("required by"), ": ", requiredByStr, ")")
 
+			missing = append(missing, depString)
+
 			continue
 		}
 
@@ -597,11 +597,10 @@ func (g *Grapher) findDepsFromAUR(ctx context.Context,
 		}
 
 		g.providerCache[depString] = []aurc.Pkg{pkg}
-		deps.Remove(depString)
 		pkgsToAdd = append(pkgsToAdd, pkg)
 	}
 
-	return pkgsToAdd
+	return pkgsToAdd, missing
 }
 
 func (g *Grapher) ValidateAndSetNodeInfo(graph *topo.Graph[string, *InstallInfo],
@@ -627,20 +626,20 @@ func (g *Grapher) addNodes(
 	deps []string,
 	depType Reason,
 ) {
-	targetsToFind := mapset.NewThreadUnsafeSet(deps...)
+	pending := dedupeDeps(deps)
+
 	// Check if in graph already
-	for _, depString := range targetsToFind.ToSlice() {
+	keep := pending[:0]
+	for _, depString := range pending {
 		depName, _, _ := splitDep(depString)
-		if !graph.Exists(depName) && !graph.HasProvides(depName) {
-			continue
-		}
+		handled := false
 
 		if graph.Exists(depName) {
 			if err := graph.DependOn(depName, parentPkgName); err != nil {
 				g.logger.Warnln(depString, parentPkgName, err)
 			}
 
-			targetsToFind.Remove(depString)
+			handled = true
 		}
 
 		if p := graph.GetProviderInfo(depName); p != nil {
@@ -649,19 +648,23 @@ func (g *Grapher) addNodes(
 					g.logger.Warnln(p.Provider, parentPkgName, err)
 				}
 
-				targetsToFind.Remove(depString)
+				handled = true
 			}
 		}
+
+		if !handled {
+			keep = append(keep, depString)
+		}
 	}
+	pending = keep
 
 	// Check installed
-	for _, depString := range targetsToFind.ToSlice() {
+	keep = pending[:0]
+	for _, depString := range pending {
 		depName, _, _ := splitDep(depString)
 		if !g.dbExecutor.LocalSatisfierExists(depString) {
-			continue
-		}
-
-		if g.fullGraph {
+			keep = append(keep, depString)
+		} else if g.fullGraph {
 			g.ValidateAndSetNodeInfo(
 				graph,
 				depName,
@@ -671,14 +674,16 @@ func (g *Grapher) addNodes(
 				g.logger.Warnln(depName, parentPkgName, err)
 			}
 		}
-
-		targetsToFind.Remove(depString)
 	}
+	pending = keep
 
 	// Check Sync
-	for _, depString := range targetsToFind.ToSlice() {
+	keep = pending[:0]
+	for _, depString := range pending {
 		alpmPkg := g.dbExecutor.SyncSatisfier(depString)
 		if alpmPkg == nil {
+			keep = append(keep, depString)
+
 			continue
 		}
 
@@ -709,12 +714,11 @@ func (g *Grapher) addNodes(
 
 			g.addNodes(ctx, graph, alpmPkg.Name(), newDepsSlice, Dep)
 		}
-
-		targetsToFind.Remove(depString)
 	}
+	pending = keep
 
 	// Check AUR
-	pkgsToAdd := g.findDepsFromAUR(ctx, graph, parentPkgName, targetsToFind)
+	pkgsToAdd, missing := g.findDepsFromAUR(ctx, graph, parentPkgName, pending)
 	for i := range pkgsToAdd {
 		aurPkg := &pkgsToAdd[i]
 		if err := graph.DependOn(aurPkg.Name, parentPkgName); err != nil {
@@ -740,7 +744,7 @@ func (g *Grapher) addNodes(
 	}
 
 	// Add missing to graph
-	for _, depString := range targetsToFind.ToSlice() {
+	for _, depString := range missing {
 		depName, mod, ver := splitDep(depString)
 		// no dep found. add as missing
 		if err := graph.DependOn(depName, parentPkgName); err != nil {
@@ -756,6 +760,22 @@ func (g *Grapher) addNodes(
 			},
 		})
 	}
+}
+
+// dedupeDeps returns the unique entries of deps in first-seen order.
+func dedupeDeps(deps []string) []string {
+	if len(deps) == 0 {
+		return nil
+	}
+
+	out := make([]string, 0, len(deps))
+	for _, d := range deps {
+		if !slices.Contains(out, d) {
+			out = append(out, d)
+		}
+	}
+
+	return out
 }
 
 func (g *Grapher) provideMenu(dep string, options []aur.Pkg) *aur.Pkg {
