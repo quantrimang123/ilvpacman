@@ -6,7 +6,7 @@ BUILD_TAG = devel
 ARCH ?= $(shell uname -m)
 BIN := ilvpacman
 DESTDIR :=
-GO ?= ilvpacman
+GO ?= go
 PKGNAME := ilvpacman
 PREFIX := /usr/local
 
