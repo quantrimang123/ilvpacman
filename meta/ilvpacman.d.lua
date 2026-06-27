@@ -1,23 +1,23 @@
--- yay Lua API type definitions for lua-language-server.
+-- ilvpacman Lua API type definitions for lua-language-server.
 --
 -- This is a meta file: lua-language-server loads it for type information only
 -- and never executes it. Add this directory to your `workspace.library` so the
--- `yay` global, its options, and autocmd event payloads are recognised and
+-- `ilvpacman` global, its options, and autocmd event payloads are recognised and
 -- type-checked in your init.lua. See doc/lua.md "Editor support" for setup.
 --
--- API reference: https://github.com/Jguer/yay/blob/next/doc/lua.md
+-- API reference: 
 
 ---@meta
 
 -- Aliases
 
----@alias yay.menuAnswer "" | "All" | "None" | "Installed" | "NotInstalled" | "abort"
+---@alias ilvpacman.menuAnswer "" | "All" | "None" | "Installed" | "NotInstalled" | "abort"
 
----@alias yay.Event "AURPreInstall" | "AURPostDownload" | "UpgradeSelect" | "PostInstall" | "SearchFilter"
+---@alias ilvpacman.Event "AURPreInstall" | "AURPostDownload" | "UpgradeSelect" | "PostInstall" | "SearchFilter"
 
--- Options: yay.opt
+-- Options: ilvpacman.opt
 
----@class yay.opt
+---@class ilvpacman.opt
 ---@field aururl string Base AUR URL
 ---@field aurrpcurl string AUR RPC endpoint URL; empty uses default endpoint.
 ---@field build_dir string Build/cache directory for AUR packages.
@@ -39,9 +39,9 @@
 ---@field sudo_bin string Privilege elevation command.
 ---@field sudo_flags string Extra flags passed to the sudo command.
 ---@field rebuild "no" | "yes" | "tree" | "all" Build mode.
----@field answer_clean yay.menuAnswer yay v13.0.1+ Pre-select clean menu answer (also accepts menu syntax: ranges, ^n).
----@field answer_diff yay.menuAnswer yay v13.0.1+ Pre-select diff menu answer (also accepts menu syntax: ranges, ^n).
----@field answer_edit yay.menuAnswer yay v13.0.1+ Pre-select edit menu answer (also accepts menu syntax: ranges, ^n).
+---@field answer_clean ilvpacman.menuAnswer ilvpacman v13.0.1+ Pre-select clean menu answer (also accepts menu syntax: ranges, ^n).
+---@field answer_diff ilvpacman.menuAnswer ilvpacman v13.0.1+ Pre-select diff menu answer (also accepts menu syntax: ranges, ^n).
+---@field answer_edit ilvpacman.menuAnswer ilvpacman v13.0.1+ Pre-select edit menu answer (also accepts menu syntax: ranges, ^n).
 ---@field request_split_n integer Max packages per AUR RPC request (use values > 0).
 ---@field completion_refresh_time integer Completion cache refresh days: -1 (never), 0 (always), >0 (every N days).
 ---@field max_concurrent_downloads integer Parallel PKGBUILD source downloads; 0 uses CPU count.
@@ -64,9 +64,9 @@
 ---@field rpc boolean Use AUR RPC for dependency/query operations.
 ---@field double_confirm boolean Ask for confirmation before and after builds during upgrades.
 
--- Logging: yay.log
+-- Logging: ilvpacman.log
 
----@class yay.log
+---@class ilvpacman.log
 ---@field debug fun(...: any)
 ---@field info fun(...: any)
 ---@field warn fun(...: any)
@@ -75,7 +75,7 @@
 -- Event payloads: AURPreInstall / AURPostDownload
 -- Both events share the same data shape; only the `event` string differs.
 
----@class yay.AURPreInstallPackage
+---@class ilvpacman.AURPreInstallPackage
 ---@field name string
 ---@field version string
 ---@field local_version string
@@ -83,7 +83,7 @@
 ---@field upgrade boolean
 ---@field devel boolean
 
----@class yay.AURPreInstallSRCINFO
+---@class ilvpacman.AURPreInstallSRCINFO
 ---@field pkgbase string
 ---@field pkgver string
 ---@field pkgrel string
@@ -101,7 +101,7 @@
 ---@field conflicts string[]
 ---@field replaces string[]
 
----@class yay.AURInstallData
+---@class ilvpacman.AURInstallData
 ---@field base string
 ---@field dir string
 ---@field pkgbuild_path string
@@ -110,22 +110,22 @@
 ---@field version string
 ---@field last_modified integer
 ---@field installed boolean
----@field packages yay.AURPreInstallPackage[]
----@field srcinfo yay.AURPreInstallSRCINFO
+---@field packages ilvpacman.AURPreInstallPackage[]
+---@field srcinfo ilvpacman.AURPreInstallSRCINFO
 
----@class yay.AURPreInstallEvent
+---@class ilvpacman.AURPreInstallEvent
 ---@field event "AURPreInstall"
 ---@field match string
----@field data yay.AURInstallData
+---@field data ilvpacman.AURInstallData
 
----@class yay.AURPostDownloadEvent
+---@class ilvpacman.AURPostDownloadEvent
 ---@field event "AURPostDownload"
 ---@field match string
----@field data yay.AURInstallData
+---@field data ilvpacman.AURInstallData
 
 -- Event payloads: UpgradeSelect
 
----@class yay.UpgradeSelectPackage
+---@class ilvpacman.UpgradeSelectPackage
 ---@field id integer
 ---@field name string
 ---@field base string
@@ -136,37 +136,37 @@
 ---@field last_modified integer
 ---@field maintainer string
 
----@class yay.UpgradeSelectData
----@field upgrades yay.UpgradeSelectPackage[]
----@field pulled_dependencies yay.UpgradeSelectPackage[]
+---@class ilvpacman.UpgradeSelectData
+---@field upgrades ilvpacman.UpgradeSelectPackage[]
+---@field pulled_dependencies ilvpacman.UpgradeSelectPackage[]
 
----@class yay.UpgradeSelectEvent
+---@class ilvpacman.UpgradeSelectEvent
 ---@field event "UpgradeSelect"
----@field data yay.UpgradeSelectData
+---@field data ilvpacman.UpgradeSelectData
 
----@class yay.UpgradeSelectResult
+---@class ilvpacman.UpgradeSelectResult
 ---@field exclude string[]
 ---@field skip_menu boolean
 
 -- Event payloads: PostInstall
 
----@class yay.PostInstallPackage
+---@class ilvpacman.PostInstallPackage
 ---@field name string
 ---@field version string
 ---@field local_version string
 ---@field source string
 ---@field reason string
 
----@class yay.PostInstallData
----@field packages yay.PostInstallPackage[]
+---@class ilvpacman.PostInstallData
+---@field packages ilvpacman.PostInstallPackage[]
 
----@class yay.PostInstallEvent
+---@class ilvpacman.PostInstallEvent
 ---@field event "PostInstall"
----@field data yay.PostInstallData
+---@field data ilvpacman.PostInstallData
 
 -- Event payloads: SearchFilter
 
----@class yay.SearchResultPackage
+---@class ilvpacman.SearchResultPackage
 ---@field source string
 ---@field name string
 ---@field description string
@@ -176,53 +176,53 @@
 ---@field first_submitted integer
 ---@field last_modified integer
 
----@class yay.SearchFilterData
----@field results yay.SearchResultPackage[]
+---@class ilvpacman.SearchFilterData
+---@field results ilvpacman.SearchResultPackage[]
 
----@class yay.SearchFilterEvent
+---@class ilvpacman.SearchFilterEvent
 ---@field event "SearchFilter"
----@field data yay.SearchFilterData
+---@field data ilvpacman.SearchFilterData
 
----@class yay.SearchResultRef
+---@class ilvpacman.SearchResultRef
 ---@field source string
 ---@field name string
 
 -- create_autocmd opts: one per event so the callback payload is typed.
 
----@class yay.AURPreInstallOpts
+---@class ilvpacman.AURPreInstallOpts
 ---@field desc? string
----@field callback fun(event: yay.AURPreInstallEvent)
+---@field callback fun(event: ilvpacman.AURPreInstallEvent)
 
----@class yay.AURPostDownloadOpts
+---@class ilvpacman.AURPostDownloadOpts
 ---@field desc? string
----@field callback fun(event: yay.AURPostDownloadEvent)
+---@field callback fun(event: ilvpacman.AURPostDownloadEvent)
 
----@class yay.UpgradeSelectOpts
+---@class ilvpacman.UpgradeSelectOpts
 ---@field desc? string
----@field callback fun(event: yay.UpgradeSelectEvent): yay.UpgradeSelectResult?
+---@field callback fun(event: ilvpacman.UpgradeSelectEvent): ilvpacman.UpgradeSelectResult?
 
----@class yay.PostInstallOpts
+---@class ilvpacman.PostInstallOpts
 ---@field desc? string
----@field callback fun(event: yay.PostInstallEvent)
+---@field callback fun(event: ilvpacman.PostInstallEvent)
 
----@class yay.SearchFilterOpts
+---@class ilvpacman.SearchFilterOpts
 ---@field desc? string
----@field callback fun(event: yay.SearchFilterEvent): yay.SearchResultRef[]?
+---@field callback fun(event: ilvpacman.SearchFilterEvent): ilvpacman.SearchResultRef[]?
 
----@overload fun(event: "AURPreInstall", opts: yay.AURPreInstallOpts)
----@overload fun(event: "AURPostDownload", opts: yay.AURPostDownloadOpts)
----@overload fun(event: "UpgradeSelect", opts: yay.UpgradeSelectOpts)
----@overload fun(event: "PostInstall", opts: yay.PostInstallOpts)
----@overload fun(event: "SearchFilter", opts: yay.SearchFilterOpts)
----@class yay.create_autocmd
+---@overload fun(event: "AURPreInstall", opts: ilvpacman.AURPreInstallOpts)
+---@overload fun(event: "AURPostDownload", opts: ilvpacman.AURPostDownloadOpts)
+---@overload fun(event: "UpgradeSelect", opts: ilvpacman.UpgradeSelectOpts)
+---@overload fun(event: "PostInstall", opts: ilvpacman.PostInstallOpts)
+---@overload fun(event: "SearchFilter", opts: ilvpacman.SearchFilterOpts)
+---@class ilvpacman.create_autocmd
 
--- The yay global
+-- The ilvpacman global
 
----@class yay
----@field opt? yay.opt
----@field log? yay.log
+---@class ilvpacman
+---@field opt? ilvpacman.opt
+---@field log? ilvpacman.log
 ---@field abort? fun(reason: string)
----@field create_autocmd? yay.create_autocmd
+---@field create_autocmd? ilvpacman.create_autocmd
 
----@type yay
-yay = {}
+---@type ilvpacman
+ilvpacman = {}
