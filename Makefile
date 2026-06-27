@@ -116,7 +116,7 @@ $(BIN): $(SOURCES)
 	$(GO) build $(FLAGS) -ldflags '$(LDFLAGS)' $(EXTRA_FLAGS) -o $@
 
 $(RELEASE_DIR):
-	mkdir $(RELEASE_DIR)
+	mkdir -p $(RELEASE_DIR)
 
 $(PACKAGE): $(BIN) $(RELEASE_DIR) ${MOFILES}
 	strip ${BIN}
