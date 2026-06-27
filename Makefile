@@ -70,7 +70,7 @@ docker-release-all:
 
 docker-release:
 	docker create --name ilvpacman-$(ARCH) ilvpacman:${ARCH} /bin/sh
-	docker cp ilvpacman-$(ARCH):/app/${PACKAGE} $(PACKAGE)
+	mkdir -p ilvpacman_refs/heads/ && docker cp ilvpacman-$(ARCH):/app/${PACKAGE} $(PACKAGE)
 	docker container rm ilvpacman-$(ARCH)
 
 .PHONY: docker-build
