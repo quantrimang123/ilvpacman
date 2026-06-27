@@ -1,25 +1,25 @@
 # Lua configuration (`init.lua`)
 
-yay can optionally load a Lua configuration file, `init.lua`. `init.lua` overlays whatever is in `config.json`, and any command-line flag you pass still wins over `init.lua`.
+ilvpacman can optionally load a Lua configuration file, `init.lua`. `init.lua` overlays whatever is in `config.json`, and any command-line flag you pass still wins over `init.lua`.
 
-yay uses the [Lua 5.1 interpreter](https://www.lua.org/manual/5.1/) to run `init.lua`. The Lua standard library is available.
+ilvpacman uses the [Lua 5.1 interpreter](https://www.lua.org/manual/5.1/) to run `init.lua`. The Lua standard library is available.
 
 ## Location
 
 `init.lua` is looked up, in order:
 
-1. `$XDG_CONFIG_HOME/yay/init.lua`
-2. `$HOME/.config/yay/init.lua`
+1. `$XDG_CONFIG_HOME/ilvpacman/init.lua`
+2. `$HOME/.config/ilvpacman/init.lua`
 
 [Example init.lua](./init.lua)
 
 ## Editor support
 
-<p class="api-since">Available from yay v13.0.2</p>
+<p class="api-since">Available from ilvpacman v13.0.2</p>
 
-yay ships a [lua-language-server](https://luals.github.io/) type definition file
-at [`meta/yay.d.lua`](../meta/yay.d.lua). It declares the `yay` global,
-every `yay.opt` field, and all autocmd event payloads so your editor can provide
+ilvpacman ships a [lua-language-server](https://luals.github.io/) type definition file
+at [`meta/ilvpacman.d.lua`](../meta/ilvpacman.d.lua). It declares the `ilvpacman` global,
+every `ilvpacman.opt` field, and all autocmd event payloads so your editor can provide
 completion, hover documentation, and catch typos such as unknown option names or
 misspelled event fields.
 
@@ -33,33 +33,33 @@ With a `.luarc.json` in your project root, next to `init.lua`:
 {
   "runtime": { "version": "Lua 5.1" },
   "workspace": {
-    "library": ["/usr/share/yay/meta"]
+    "library": ["/usr/share/ilvpacman/meta"]
   }
 }
 ```
 
-Replace `/usr/share/yay/meta` with the path to the `meta/` directory in your
-local yay checkout or installation. The runtime version should be `Lua 5.1`
-because yay runs `init.lua` through the [gopher-lua](https://github.com/yuin/gopher-lua) Lua 5.1 interpreter.
+Replace `/usr/share/ilvpacman/meta` with the path to the `meta/` directory in your
+local ilvpacman checkout or installation. The runtime version should be `Lua 5.1`
+because ilvpacman runs `init.lua` through the [gopher-lua](https://github.com/yuin/gopher-lua) Lua 5.1 interpreter.
 
 lua-language-server is available for [VS Code](https://marketplace.visualstudio.com/items?itemName=sumneko.lua), [Neovim](https://luals.github.io/#neovim-install), [JetBrains](https://plugins.jetbrains.com/plugin/22315-sumnekolua), and [other editors](https://luals.github.io/#other-install) that support the Language Server Protocol.
 
-## Setting options with `yay.opt`
+## Setting options with `ilvpacman.opt`
 
-<p class="api-since">Available from yay v13.0.0</p>
+<p class="api-since">Available from ilvpacman v13.0.0</p>
 
-Assign to keys on the `yay.opt` table using the exact option names shown
+Assign to keys on the `ilvpacman.opt` table using the exact option names shown
 below.
 
 ```lua
-yay.opt.bottom_up = false
-yay.opt.clean_after = true
-yay.opt.sort_by = "votes"
-yay.opt.request_split_n = 150
-yay.opt.editor = os.getenv("EDITOR") or "vi"
+ilvpacman.opt.bottom_up = false
+ilvpacman.opt.clean_after = true
+ilvpacman.opt.sort_by = "votes"
+ilvpacman.opt.request_split_n = 150
+ilvpacman.opt.editor = os.getenv("EDITOR") or "vi"
 ```
 
-Unknown keys and values of the wrong type are treated as errors. yay aborts
+Unknown keys and values of the wrong type are treated as errors. ilvpacman aborts
 startup and reports the offending keys/values so misconfigurations fail fast.
 
 ### Available options
@@ -71,7 +71,7 @@ startup and reports the offending keys/values so misconfigurations fail fast.
 `gpg_bin`, `gpg_flags`, `mflags`, `sort_by`, `search_by`, `git_flags`,
 `remove_make`, `sudo_bin`, `sudo_flags`
 
-**Strings (Available from yay v13.0.1)**
+**Strings (Available from ilvpacman v13.0.1)**
 
 `answer_clean`, `answer_diff`, `answer_edit`
 
@@ -89,36 +89,36 @@ startup and reports the offending keys/values so misconfigurations fail fast.
 A ready-to-copy example
 lives at [`doc/init.lua`](init.lua).
 
-## Logging with `yay.log`
+## Logging with `ilvpacman.log`
 
-<p class="api-since">Available from yay v13.0.0</p>
+<p class="api-since">Available from ilvpacman v13.0.0</p>
 
-Lua config and hooks can write through yay's normal logger:
+Lua config and hooks can write through ilvpacman's normal logger:
 
 ```lua
-yay.log.debug("build dir:", yay.opt.build_dir)
-yay.log.info("loaded init.lua")
-yay.log.warn("skipping", "pkgname")
-yay.log.error("policy check failed")
+ilvpacman.log.debug("build dir:", ilvpacman.opt.build_dir)
+ilvpacman.log.info("loaded init.lua")
+ilvpacman.log.warn("skipping", "pkgname")
+ilvpacman.log.error("policy check failed")
 ```
 
 `debug` only prints when debug logging is enabled. `error` logs an error-level
-message and does not stop execution; use `yay.abort("message")` for controlled
+message and does not stop execution; use `ilvpacman.abort("message")` for controlled
 hook stops.
 
 ## Requiring modules with `require()`
 
-<p class="api-since">Available from yay v13.0.1</p>
+<p class="api-since">Available from ilvpacman v13.0.1</p>
 
 `init.lua` can pull in other Lua files with the standard `require()`
-function. yay prepends the directory that contains `init.lua` to
-`package.path`, so modules resolve relative to your yay config directory
-rather than the directory you run yay from.
+function. ilvpacman prepends the directory that contains `init.lua` to
+`package.path`, so modules resolve relative to your ilvpacman config directory
+rather than the directory you run ilvpacman from.
 
 Given this layout:
 
 ```
-$XDG_CONFIG_HOME/yay/
+$XDG_CONFIG_HOME/ilvpacman/
   init.lua
   hooks/
     maintainer_change.lua
@@ -141,27 +141,27 @@ Dotted module names map onto the filesystem, so
 helpers across multiple files and keep `init.lua` small.
 
 Required modules run in the same Lua state as `init.lua`, so anything they
-register through `yay.create_autocmd` or assign to `yay.opt` takes effect just
+register through `ilvpacman.create_autocmd` or assign to `ilvpacman.opt` takes effect just
 as if it were written inline.
 
 ## Upgrade selection hooks
 
-<p class="api-since">Available from yay v13.0.0</p>
+<p class="api-since">Available from ilvpacman v13.0.0</p>
 
-`UpgradeSelect` runs during `yay -Syu` after yay has built and sorted the
+`UpgradeSelect` runs during `ilvpacman -Syu` after ilvpacman has built and sorted the
 upgrade graph, and before the native "Packages to exclude" menu is printed.
-The hook can return package names to exclude. By default, yay still shows the
+The hook can return package names to exclude. By default, ilvpacman still shows the
 native menu after applying hook exclusions.
 
 ```lua
-yay.create_autocmd("UpgradeSelect", {
+ilvpacman.create_autocmd("UpgradeSelect", {
   desc = "skip recently modified AUR upgrades",
   callback = function(event)
     local exclude = {}
     local recent_cutoff = os.time() - (3 * 24 * 60 * 60)
     for _, pkg in ipairs(event.data.upgrades) do
       if pkg.repository == "aur" and pkg.last_modified >= recent_cutoff then
-        yay.log.debug("pre-excluding recently modified AUR package:", pkg.name)
+        ilvpacman.log.debug("pre-excluding recently modified AUR package:", pkg.name)
         table.insert(exclude, pkg.name)
       end
     end
@@ -172,7 +172,7 @@ yay.create_autocmd("UpgradeSelect", {
 ```
 
 Multiple `UpgradeSelect` hooks run in registration order. Their `exclude`
-lists are unioned. If any hook returns `skip_menu = true`, yay applies all hook
+lists are unioned. If any hook returns `skip_menu = true`, ilvpacman applies all hook
 exclusions and skips the native menu. With `skip_menu = false` or no return
 value, hook exclusions are applied first and then the native menu is shown.
 
@@ -221,17 +221,17 @@ The callback receives this table:
 ```
 
 For selectable `data.upgrades` entries, `id` matches the number shown in the
-native menu. `pulled_dependencies` entries are shown separately by yay and use
+native menu. `pulled_dependencies` entries are shown separately by ilvpacman and use
 `id = 0` because they are not directly selectable.
 
 ## AUR pre-install hooks
 
-<p class="api-since">Available from yay v13.0.0</p>
+<p class="api-since">Available from ilvpacman v13.0.0</p>
 
 `init.lua` can register hooks with a small autocmd API:
 
 ```lua
-yay.create_autocmd("AURPreInstall", {
+ilvpacman.create_autocmd("AURPreInstall", {
   desc = "inspect or modify AUR package files",
   callback = function(event)
     -- event.match is the package base.
@@ -244,11 +244,11 @@ yay.create_autocmd("AURPreInstall", {
 after the AUR PKGBUILD repositories are downloaded and merged. It runs before
 the clean, diff, and edit menus, and before source downloads or builds.
 
-Use `yay.abort("message")` for controlled policy stops without a Lua
-traceback. If a callback raises a Lua error, yay aborts the install before
+Use `ilvpacman.abort("message")` for controlled policy stops without a Lua
+traceback. If a callback raises a Lua error, ilvpacman aborts the install before
 build work starts and includes the Lua traceback for debugging.
 
-Changing fields in the Lua `event` table does not change yay's internal
+Changing fields in the Lua `event` table does not change ilvpacman's internal
 package state. Hooks can still edit files through Lua's normal `io` and `os`
 libraries; later menus and build steps will see those file changes.
 
@@ -308,12 +308,12 @@ listed separately. `reason` is one of `explicit`, `dependency`,
 ### Example
 
 ```lua
-yay.create_autocmd("AURPreInstall", {
+ilvpacman.create_autocmd("AURPreInstall", {
   desc = "block forbidden sources and patch a PKGBUILD",
   callback = function(event)
     if event.data.pkgbuild:match("forbidden.example") then
-      yay.log.warn(event.match .. ": forbidden source URL")
-      yay.abort(event.match .. ": forbidden source URL")
+      ilvpacman.log.warn(event.match .. ": forbidden source URL")
+      ilvpacman.abort(event.match .. ": forbidden source URL")
     end
 
     if event.match == "demo-pkg" then
@@ -334,13 +334,13 @@ yay.create_autocmd("AURPreInstall", {
 
 ## AUR post-download hooks
 
-<p class="api-since">Available from yay v13.0.0</p>
+<p class="api-since">Available from ilvpacman v13.0.0</p>
 
 `AURPostDownload` runs once per AUR package base, in sorted package-base order,
-after yay runs `makepkg --verifysource` for package sources and before
+after ilvpacman runs `makepkg --verifysource` for package sources and before
 compatibility checks, PGP key import prompts, builds, or package installs.
 
-Use `yay.abort("message")` to stop the operation without a Lua traceback.
+Use `ilvpacman.abort("message")` to stop the operation without a Lua traceback.
 `AURPostDownload` receives the same payload shape as `AURPreInstall`; only the
 `event` value differs.
 
@@ -370,11 +370,11 @@ The callback receives this table:
 ### Example
 
 ```lua
-yay.create_autocmd("AURPostDownload", {
+ilvpacman.create_autocmd("AURPostDownload", {
   desc = "block forbidden source URLs after download",
   callback = function(event)
     if event.data.pkgbuild:match("forbidden.example") then
-      yay.abort(event.match .. ": forbidden source URL")
+      ilvpacman.abort(event.match .. ": forbidden source URL")
     end
   end,
 })
@@ -382,11 +382,11 @@ yay.create_autocmd("AURPostDownload", {
 
 ## Post-install hooks
 
-<p class="api-since">Available from yay v13.0.0</p>
+<p class="api-since">Available from ilvpacman v13.0.0</p>
 
 `PostInstall` fires once after a successful install/upgrade transaction, before
-yay exits. It is skipped when `--downloadonly` (`-w`) is used. Because the
-installation is already complete when the callback runs, calling `yay.abort`
+ilvpacman exits. It is skipped when `--downloadonly` (`-w`) is used. Because the
+installation is already complete when the callback runs, calling `ilvpacman.abort`
 logs the message but cannot roll back anything.
 
 ### PostInstall event
@@ -403,25 +403,25 @@ logs the message but cannot roll back anything.
         source        = "aur",        -- "aur" | "sync" | "local" | "srcinfo" | "missing"
         reason        = "explicit",   -- "explicit" | "dependency" | "make_dependency" | "check_dependency" | "unknown"
       },
-      -- one entry per package yay resolved; sorted alphabetically
+      -- one entry per package ilvpacman resolved; sorted alphabetically
     },
   },
 }
 ```
 
-The `packages` array covers every node yay resolved into the transaction (all
+The `packages` array covers every node ilvpacman resolved into the transaction (all
 sources, all topo layers). Transitive repo dependencies pulled in by pacman
-but not explicitly tracked by yay are **not** included. The callback is
+but not explicitly tracked by ilvpacman are **not** included. The callback is
 fire-and-forget: no return value is read.
 
 ### Example
 
 ```lua
-yay.create_autocmd("PostInstall", {
-  desc = "log every package yay installed",
+ilvpacman.create_autocmd("PostInstall", {
+  desc = "log every package ilvpacman installed",
   callback = function(event)
     for _, pkg in ipairs(event.data.packages) do
-      yay.log.info(pkg.name .. " " .. pkg.version .. " (" .. pkg.source .. ")")
+      ilvpacman.log.info(pkg.name .. " " .. pkg.version .. " (" .. pkg.source .. ")")
     end
   end,
 })
@@ -429,7 +429,7 @@ yay.create_autocmd("PostInstall", {
 
 ## Search-filter hooks
 
-`SearchFilter` runs during `yay -Ss` and the `yay -S` number menu, after
+`SearchFilter` runs during `ilvpacman -Ss` and the `ilvpacman -S` number menu, after
 results are ranked and sorted but before they are displayed. The callback
 receives the full ordered result list and may return a filtered or reordered
 subset. Returning `nil` (or nothing) leaves the list unchanged.
@@ -441,7 +441,7 @@ the **unfiltered** results are shown rather than aborting the command.
 
 ### SearchFilter event
 
-<p class="api-since">Available from yay v13.0.0</p>
+<p class="api-since">Available from ilvpacman v13.0.0</p>
 
 ```lua
 {
@@ -470,7 +470,7 @@ The callback must return `nil` or an array of `{source=, name=}` tables. Every
 ### Example
 
 ```lua
-yay.create_autocmd("SearchFilter", {
+ilvpacman.create_autocmd("SearchFilter", {
   desc = "show only AUR results",
   callback = function(event)
     local out = {}
