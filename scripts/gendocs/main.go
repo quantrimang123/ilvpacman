@@ -1,4 +1,4 @@
-// Command gendocs renders yay's doc/ directory into a static HTML site
+// Command gendocs renders ilvpacman's doc/ directory into a static HTML site
 // suitable for GitHub Pages.
 //
 // Usage (from repository root):
@@ -8,7 +8,7 @@
 // Pages produced:
 //
 //	index.html      — landing page
-//	man.html        — yay(8) man page (troff → Markdown → HTML)
+//	man.html        — ilvpacman(8) man page (troff → Markdown → HTML)
 //	lua.html        — Lua API reference (lua.md → HTML)
 //	init-lua.html   — init.lua template as a syntax-highlighted code block
 package main
@@ -36,9 +36,9 @@ func main() {
 		fatal(err)
 	}
 
-	// yay.8 (troff man page) → Markdown → HTML
-	man8 := mustRead(filepath.Join(*docs, "yay.8"))
-	writePage(*out, "man.html", pageData{Title: "yay(8) Manual", Body: template.HTML(mdToHTML(troff2md(man8)))})
+	// ilvpacman.8 (troff man page) → Markdown → HTML
+	man8 := mustRead(filepath.Join(*docs, "ilvpacman.8"))
+	writePage(*out, "man.html", pageData{Title: "ilvpacman(8) Manual", Body: template.HTML(mdToHTML(troff2md(man8)))})
 
 	// lua.md → HTML with TOC and version badges
 	luaMD := mustRead(filepath.Join(*docs, "lua.md"))
@@ -52,7 +52,7 @@ func main() {
 
 	// index / landing page
 	indexMD := mustRead(filepath.Join(*docs, "index.md"))
-	writePage(*out, "index.html", pageData{Title: "yay", Body: template.HTML(mdToHTML(indexMD))})
+	writePage(*out, "index.html", pageData{Title: "ilvpacman", Body: template.HTML(mdToHTML(indexMD))})
 
 	fmt.Printf("site written to %s\n", *out)
 }
@@ -64,7 +64,7 @@ var pageTmpl = template.Must(template.New("").Parse(`<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{{.Title}} — yay</title>
+<title>{{.Title}} — ilvpacman</title>
 <style>
 *,*::before,*::after{box-sizing:border-box}
 body{font:16px/1.7 system-ui,sans-serif;max-width:820px;margin:0 auto;padding:2rem 1.25rem;color:#1a1a1a}
@@ -96,7 +96,7 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #e0e0e0;color:#666;
 </head>
 <body>
 <nav>
-<a href="index.html">yay</a>
+<a href="index.html">ilvpacman</a>
 <a href="man.html">Manual</a>
 <a href="lua.html">Lua API</a>
 <a href="init-lua.html">init.lua</a>
@@ -105,7 +105,7 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #e0e0e0;color:#666;
 <main>
 {{.Body}}
 </main>
-<footer>yay · <a href="https://github.com/Jguer/yay">github.com/Jguer/yay</a></footer>
+<footer>ilvpacman · <a href="https://github.com/Jguer/ilvpacman">github.com/Jguer/ilvpacman</a></footer>
 </body>
 </html>`))
 
@@ -191,7 +191,7 @@ func mdToHTML(src []byte) []byte {
 
 // ── troff man page → Markdown ─────────────────────────────────────────────────
 
-// troff2md converts the troff/man macros used in yay.8 to Markdown.
+// troff2md converts the troff/man macros used in ilvpacman.8 to Markdown.
 // Only macros present in that file are handled; everything else is skipped.
 func troff2md(src []byte) []byte {
 	var buf bytes.Buffer
