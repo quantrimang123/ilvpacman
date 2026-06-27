@@ -4,10 +4,10 @@ export GOPROXY
 
 BUILD_TAG = devel
 ARCH ?= $(shell uname -m)
-BIN := yay
+BIN := ilvpacman
 DESTDIR :=
-GO ?= go
-PKGNAME := yay
+GO ?= ilvpacman
+PKGNAME := ilvpacman
 PREFIX := /usr/local
 
 MAJORVERSION := 13
@@ -26,7 +26,7 @@ MOFILES := $(POFILES:.po=.mo)
 
 FLAGS ?= -trimpath -mod=readonly -modcacherw
 EXTRA_FLAGS ?= -buildmode=pie
-LDFLAGS := -X "main.yayVersion=${VERSION}" -X "main.localePath=${SYSTEMLOCALEPATH}" -linkmode=external -compressdwarf=false
+LDFLAGS := -X "main.ilvVersion=${VERSION}" -X "main.localePath=${SYSTEMLOCALEPATH}" -linkmode=external -compressdwarf=false
 
 RELEASE_DIR := ${PKGNAME}_${VERSION}_${ARCH}
 PACKAGE := $(RELEASE_DIR).tar.gz
@@ -69,16 +69,16 @@ docker-release-all:
 	make docker-release-aarch64 ARCH=aarch64
 
 docker-release:
-	docker create --name yay-$(ARCH) yay:${ARCH} /bin/sh
-	docker cp yay-$(ARCH):/app/${PACKAGE} $(PACKAGE)
-	docker container rm yay-$(ARCH)
+	docker create --name ilvpacman-$(ARCH) ilvpacman:${ARCH} /bin/sh
+	docker cp ilvpacman-$(ARCH):/app/${PACKAGE} $(PACKAGE)
+	docker container rm ilvpacman-$(ARCH)
 
 .PHONY: docker-build
 docker-build:
-	docker build -t yay-$(ARCH):${VERSION} .
-	docker run -e="ARCH=$(ARCH)" --name yay-$(ARCH) yay-$(ARCH):${VERSION} make build VERSION=${VERSION} PREFIX=${PREFIX}
-	docker cp yay-$(ARCH):/app/${BIN} $(BIN)
-	docker container rm yay-$(ARCH)
+	docker build -t ilvpacman-$(ARCH):${VERSION} .
+	docker run -e="ARCH=$(ARCH)" --name ilvpacman-$(ARCH) ilvpacman-$(ARCH):${VERSION} make build VERSION=${VERSION} PREFIX=${PREFIX}
+	docker cp ilvpacman-$(ARCH):/app/${BIN} $(BIN)
+	docker container rm ilvpacman-$(ARCH)
 
 .PHONY: lint
 lint:
