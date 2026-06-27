@@ -1,6 +1,7 @@
 module github.com/quantrimang123/ilvpacman
 
 require (
+    github.com/Jguer/yay/v13 v13.0.1
 	github.com/Jguer/aur v1.3.0
 	github.com/Jguer/dyalpm v0.1.3
 	github.com/Jguer/votar v1.0.0
