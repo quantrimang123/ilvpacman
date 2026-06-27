@@ -1,10 +1,10 @@
 module github.com/quantrimang123/ilvpacman
 
 require (
-    github.com/Jguer/yay/v13 v13.0.1
 	github.com/Jguer/aur v1.3.0
 	github.com/Jguer/dyalpm v0.1.3
 	github.com/Jguer/votar v1.0.0
+	github.com/Jguer/yay/v13 v13.0.1
 	github.com/Morganamilo/go-pacmanconf v0.0.0-20210502114700-cff030e927a5
 	github.com/Morganamilo/go-srcinfo v1.0.0
 	github.com/adrg/strutil v0.3.1
@@ -35,4 +35,5 @@ require (
 )
 
 go 1.26
+
 toolchain go1.26.0
