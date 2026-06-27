@@ -1,4 +1,4 @@
-module github.com/Jguer/yay/v13
+module github.com/quantrimang123/ilvpacman
 
 require (
 	github.com/Jguer/aur v1.3.0
