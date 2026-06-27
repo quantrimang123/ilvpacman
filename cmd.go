@@ -245,13 +245,13 @@ func handleHelp(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Argum
 }
 
 func handleVersion(logger *text.Logger) {
-	logger.Printf("yay v%s - libalpm v%s\n", yayVersion, alpm.Version())
+	logger.Printf("yay v%s - libalpm v%s\n", ilvVersion, alpm.Version())
 }
 
 func handlePrint(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Arguments, dbExecutor db.Executor) error {
 	switch {
 	case cmdArgs.ExistsArg("d", "defaultconfig"):
-		tmpConfig := settings.DefaultConfig(yayVersion)
+		tmpConfig := settings.DefaultConfig(ilvVersion)
 		run.Logger.Printf("%v", tmpConfig)
 
 		return nil
