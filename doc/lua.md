@@ -15,7 +15,7 @@ ilvpacman uses the [Lua 5.1 interpreter](https://www.lua.org/manual/5.1/) to run
 
 ## Editor support
 
-<p class="api-since">Available from ilvpacman v13.0.2</p>
+<p class="api-since">Available from ilvpacman v0.0.1.2</p>
 
 ilvpacman ships a [lua-language-server](https://luals.github.io/) type definition file
 at [`meta/ilvpacman.d.lua`](../meta/ilvpacman.d.lua). It declares the `ilvpacman` global,
@@ -46,7 +46,7 @@ lua-language-server is available for [VS Code](https://marketplace.visualstudio.
 
 ## Setting options with `ilvpacman.opt`
 
-<p class="api-since">Available from ilvpacman v13.0.0</p>
+<p class="api-since">Available from ilvpacman v0.0.1.</p>
 
 Assign to keys on the `ilvpacman.opt` table using the exact option names shown
 below.
@@ -71,7 +71,7 @@ startup and reports the offending keys/values so misconfigurations fail fast.
 `gpg_bin`, `gpg_flags`, `mflags`, `sort_by`, `search_by`, `git_flags`,
 `remove_make`, `sudo_bin`, `sudo_flags`
 
-**Strings (Available from ilvpacman v13.0.1)**
+**Strings (Available from ilvpacman v0.0.1)**
 
 `answer_clean`, `answer_diff`, `answer_edit`
 
@@ -91,7 +91,7 @@ lives at [`doc/init.lua`](init.lua).
 
 ## Logging with `ilvpacman.log`
 
-<p class="api-since">Available from ilvpacman v13.0.0</p>
+<p class="api-since">Available from ilvpacman v0.0.1</p>
 
 Lua config and hooks can write through ilvpacman's normal logger:
 
@@ -108,7 +108,7 @@ hook stops.
 
 ## Requiring modules with `require()`
 
-<p class="api-since">Available from ilvpacman v13.0.1</p>
+<p class="api-since">Available from ilvpacman v0.0.1</p>
 
 `init.lua` can pull in other Lua files with the standard `require()`
 function. ilvpacman prepends the directory that contains `init.lua` to
@@ -146,7 +146,7 @@ as if it were written inline.
 
 ## Upgrade selection hooks
 
-<p class="api-since">Available from ilvpacman v13.0.0</p>
+<p class="api-since">Available from ilvpacman v0.0.1</p>
 
 `UpgradeSelect` runs during `ilvpacman -Syu` after ilvpacman has built and sorted the
 upgrade graph, and before the native "Packages to exclude" menu is printed.
@@ -226,7 +226,7 @@ native menu. `pulled_dependencies` entries are shown separately by ilvpacman and
 
 ## AUR pre-install hooks
 
-<p class="api-since">Available from ilvpacman v13.0.0</p>
+<p class="api-since">Available from ilvpacman v0.0.1</p>
 
 `init.lua` can register hooks with a small autocmd API:
 
@@ -334,7 +334,7 @@ ilvpacman.create_autocmd("AURPreInstall", {
 
 ## AUR post-download hooks
 
-<p class="api-since">Available from ilvpacman v13.0.0</p>
+<p class="api-since">Available from ilvpacman v0.0.1</p>
 
 `AURPostDownload` runs once per AUR package base, in sorted package-base order,
 after ilvpacman runs `makepkg --verifysource` for package sources and before
@@ -382,7 +382,7 @@ ilvpacman.create_autocmd("AURPostDownload", {
 
 ## Post-install hooks
 
-<p class="api-since">Available from ilvpacman v13.0.0</p>
+<p class="api-since">Available from ilvpacman v0.0.1</p>
 
 `PostInstall` fires once after a successful install/upgrade transaction, before
 ilvpacman exits. It is skipped when `--downloadonly` (`-w`) is used. Because the
@@ -441,7 +441,7 @@ the **unfiltered** results are shown rather than aborting the command.
 
 ### SearchFilter event
 
-<p class="api-since">Available from ilvpacman v13.0.0</p>
+<p class="api-since">Available from ilvpacman v0.0.1.0</p>
 
 ```lua
 {
