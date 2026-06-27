@@ -37,7 +37,7 @@ func initGotext() {
 			gotext.Configure(localePath, locales[0], "ilvpacman")
 		}
 	} else {
-		gotext.Configure(localePath, cmp.Or(os.Getenv("LC_ALL"), os.Getenv("LC_MESSAGES"), os.Getenv("LANG")), "yay")
+		gotext.Configure(localePath, cmp.Or(os.Getenv("LC_ALL"), os.Getenv("LC_MESSAGES"), os.Getenv("LANG")), "ilvpacman")
 	}
 }
 
