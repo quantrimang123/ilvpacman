@@ -40,13 +40,13 @@ jobs:
             --build-arg VERSION=${{ steps.tags.outputs.version }} \
             --build-arg ARCH=${{ steps.tags.outputs.arch }} \
             --build-arg PREFIX="/usr" \
-            -t yay:${{ steps.tags.outputs.arch }} . --load
+            -t ilvpacman:${{ steps.tags.outputs.arch }} . --load
           make docker-release ARCH=${{ steps.tags.outputs.arch }} VERSION=${{ steps.tags.outputs.version }} PREFIX="/usr"
           mv *.tar.gz artifacts
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: yay_${{ steps.tags.outputs.arch }}
+          name: ilvpacman_${{ steps.tags.outputs.arch }}
           path: artifacts
 
   create_release:
@@ -69,7 +69,7 @@ jobs:
 
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          pattern: yay_*
+          pattern: ilvpacman_*
           merge-multiple: true
 
       - name: Create Release
@@ -79,7 +79,7 @@ jobs:
           gh release create ${{ steps.tags.outputs.tag }} \
             --title "${{ steps.tags.outputs.tag }}" \
             --generate-notes \
-            ./yay_${{ steps.tags.outputs.version }}_*.tar.gz
+            ./ilvpacman_${{ steps.tags.outputs.version }}_*.tar.gz
 
       - name: Release Notary Action
         uses: docker://aevea/release-notary@sha256:690915bf87458fd8eb1e1ff0be34b33377f920eda3f38b96c62ecbf897c831f4
