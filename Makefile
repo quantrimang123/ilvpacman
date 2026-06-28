@@ -67,13 +67,22 @@ docker-release-all:
 	make docker-release-armv7h ARCH=armv7h
 	make docker-release-x86_64 ARCH=x86_64
 	make docker-release-aarch64 ARCH=aarch64
-
 docker-release:
+	@# 1. Đảm bảo container được tạo mới hoàn toàn
+	@docker rm -f ilvpacman-$(ARCH) 2>/dev/null || true
 	docker create --name ilvpacman-$(ARCH) ilvpacman:${ARCH} /bin/sh
+	
+	@# 2. Đảm bảo thư mục đích tồn tại
 	mkdir -p ilvpacman_refs/heads/
-	docker cp ilvpacman-$(ARCH):/app/$(PACKAGE) ilvpacman_refs/heads/$(PACKAGE) && \
-	docker container rm ilvpacman-$(ARCH) && \
-	mv ilvpacman_refs/heads/$(PACKAGE) ./
+	
+	@# 3. Copy file và kiểm tra sự tồn tại
+	docker cp ilvpacman-$(ARCH):/app/$(PACKAGE) ilvpacman_refs/heads/$(PACKAGE)
+	
+	@# 4. Dọn dẹp
+	docker container rm ilvpacman-$(ARCH)
+	
+	@# 5. Di chuyển file ra thư mục hiện tại (dùng cp thay vì mv để an toàn hơn)
+	cp ilvpacman_refs/heads/$(PACKAGE) ./
 .PHONY: docker-build
 docker-build:
 	docker build -t ilvpacman-$(ARCH):${VERSION} .
