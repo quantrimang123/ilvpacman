@@ -28,29 +28,29 @@ import (
 
 func usage(logger *text.Logger) {
 	logger.Println(`Usage:
-    yay
-    yay <operation> [...]
-    yay <package(s)>
+    ./ilvpacman
+    ./ilvpacman <operation> [...]
+    ./ilvpacman <package(s)>
 
 operations:
-    yay {-h --help}
-    yay {-V --version}
-    yay {-D --database}    <options> <package(s)>
-    yay {-F --files}       [options] [package(s)]
-    yay {-Q --query}       [options] [package(s)]
-    yay {-R --remove}      [options] <package(s)>
-    yay {-S --sync}        [options] [package(s)]
-    yay {-T --deptest}     [options] [package(s)]
-    yay {-U --upgrade}     [options] <file(s)>
+    ./ilvpacman {-h --help}
+    ./ilvpacman {-V --version}
+    ./ilvpacman {-D --database}    <options> <package(s)>
+    ./ilvpacman {-F --files}       [options] [package(s)]
+    ./ilvpacman {-Q --query}       [options] [package(s)]
+    ./ilvpacman {-R --remove}      [options] <package(s)>
+    ./ilvpacman {-S --sync}        [options] [package(s)]
+    ./ilvpacman {-T --deptest}     [options] [package(s)]
+    ./ilvpacman {-U --upgrade}     [options] <file(s)>
 
 New operations:
-    yay {-B --build}       [options] [dir]
-    yay {-G --getpkgbuild} [options] [package(s)]
-    yay {-P --show}        [options]
-    yay {-W --web}         [options] [package(s)]
-    yay {-Y --yay}         [options] [package(s)]
+    ./ilvpacman {-B --build}       [options] [dir]
+    ./ilvpacman {-G --getpkgbuild} [options] [package(s)]
+    ./ilvpacman {-P --show}        [options]
+    ./ilvpacman {-W --web}         [options] [package(s)]
+    ./ilvpacman {-Y --./ilvpacman}         [options] [package(s)]
 
-If no operation is specified 'yay -Syu' will be performed
+If no operation is specified './ilvpacman -Syu' will be performed
 If no operation is specified and targets are provided, -Y will be assumed
 
 New options:
@@ -122,12 +122,12 @@ Permanent configuration options:
 
 show specific options (used with -P):
     -c --complete         Used for completions
-    -d --defaultconfig    Print default yay configuration
-    -g --currentconfig    Print current yay configuration
+    -d --defaultconfig    Print default ./ilvpacman configuration
+    -g --currentconfig    Print current ./ilvpacman configuration
     -s --stats            Display system package statistics
     -w --news             Print arch news
 
-yay specific options (used with -Y):
+./ilvpacman specific options (used with -Y):
     -c --clean            Remove unneeded dependencies (-cc to ignore optdepends)
        --gendb            Generates development package DB used for updating
 
@@ -174,8 +174,8 @@ func handleCmd(ctx context.Context, run *runtime.Runtime,
 		return handleGetpkgbuild(ctx, run, cmdArgs, dbExecutor)
 	case "P", "show":
 		return handlePrint(ctx, run, cmdArgs, dbExecutor)
-	case "Y", "yay":
-		return handleYay(ctx, run, cmdArgs, run.CmdBuilder,
+	case "Y", "./ilvpacman":
+		return handle./ilvpacman(ctx, run, cmdArgs, run.CmdBuilder,
 			dbExecutor, run.QueryBuilder)
 	case "W", "web":
 		return handleWeb(ctx, run, cmdArgs)
@@ -222,7 +222,7 @@ func handleQuery(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Argu
 	if err := run.CmdBuilder.Show(run.CmdBuilder.BuildPacmanCmd(ctx,
 		cmdArgs, run.Cfg.Mode, settings.NoConfirm)); err != nil {
 		if str := err.Error(); strings.Contains(str, "exit status") {
-			// yay -Qdt should not output anything in case of error
+			// ./ilvpacman -Qdt should not output anything in case of error
 			return fmt.Errorf("")
 		}
 
@@ -235,7 +235,7 @@ func handleQuery(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Argu
 func handleHelp(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Arguments) error {
 	usage(run.Logger)
 	switch cmdArgs.Op {
-	case "Y", "yay", "G", "getpkgbuild", "P", "show", "W", "web", "B", "build":
+	case "Y", "./ilvpacman", "G", "getpkgbuild", "P", "show", "W", "web", "B", "build":
 		return nil
 	}
 
@@ -245,7 +245,7 @@ func handleHelp(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Argum
 }
 
 func handleVersion(logger *text.Logger) {
-	logger.Printf("yay v%s - libalpm v%s\n", ilvVersion, alpm.Version())
+	logger.Printf("./ilvpacman v%s - libalpm v%s\n", ilvVersion, alpm.Version())
 }
 
 func handlePrint(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Arguments, dbExecutor db.Executor) error {
@@ -275,7 +275,7 @@ func handlePrint(ctx context.Context, run *runtime.Runtime, cmdArgs *parser.Argu
 	return nil
 }
 
-func handleYay(ctx context.Context, run *runtime.Runtime,
+func handle./ilvpacman(ctx context.Context, run *runtime.Runtime,
 	cmdArgs *parser.Arguments, cmdBuilder exe.ICmdBuilder,
 	dbExecutor db.Executor, queryBuilder query.Builder,
 ) error {
