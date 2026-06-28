@@ -59,8 +59,8 @@ test-integration:
 .PHONY: build
 build: $(BIN)
 	@echo "Đang build phiên bản $(VERSION) cho $(ARCH)..."
-$(BIN):
-	go build -o $(BIN) ./cmd/ilvpacman
+$(BIN): $(SOURCES)
+	$(GO) build $(FLAGS) -ldflags '$(LDFLAGS)' $(EXTRA_FLAGS) -o $@
 
 .PHONY: release
 release: $(PACKAGE)
@@ -114,9 +114,6 @@ uninstall:
 	for lang in ${LANGS}; do \
 		rm -f $(DESTDIR)$(PREFIX)/share/locale/$$lang/LC_MESSAGES/${PKGNAME}.mo; \
 	done
-
-$(BIN): $(SOURCES)
-	$(GO) build $(FLAGS) -ldflags '$(LDFLAGS)' $(EXTRA_FLAGS) -o $@
 
 $(RELEASE_DIR):
 	mkdir -p $(RELEASE_DIR)
