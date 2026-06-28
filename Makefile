@@ -58,6 +58,9 @@ test-integration:
 
 .PHONY: build
 build: $(BIN)
+	@echo "Đang build phiên bản $(VERSION) cho $(ARCH)..."
+$(BIN):
+	go build -o $(BIN) ./cmd/ilvpacman
 
 .PHONY: release
 release: $(PACKAGE)
