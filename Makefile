@@ -62,6 +62,13 @@ build: $(BIN)
 .PHONY: release
 release: $(PACKAGE)
 
+.PHONY: docker-build
+docker-build:
+	docker build -t ilvpacman-$(ARCH):${VERSION} .
+	docker run -e="ARCH=$(ARCH)" --name ilvpacman-$(ARCH) ilvpacman-$(ARCH):${VERSION} make build VERSION=${VERSION} PREFIX=${PREFIX}
+	docker cp ilvpacman-$(ARCH):/app/${BIN} $(BIN)
+	docker container rm ilvpacman-$(ARCH)
+
 .PHONY: docker-release-all
 docker-release-all:
 	make docker-release-armv7h ARCH=armv7h
@@ -79,13 +86,6 @@ docker-release:
 	docker container rm ilvpacman-$(ARCH)
 	@# 5. Di chuyển file ra thư mục hiện tại (dùng cp thay vì mv để an toàn hơn)
 	cp ilvpacman_refs/heads/$(PACKAGE) ./
-
-.PHONY: docker-build
-docker-build:
-	docker build -t ilvpacman-$(ARCH):${VERSION} .
-	docker run -e="ARCH=$(ARCH)" --name ilvpacman-$(ARCH) ilvpacman-$(ARCH):${VERSION} make build VERSION=${VERSION} PREFIX=${PREFIX}
-	docker cp ilvpacman-$(ARCH):/app/${BIN} $(BIN)
-	docker container rm ilvpacman-$(ARCH)
 
 .PHONY: lint
 lint:
