@@ -1,28 +1,28 @@
-.TH "YAY" "8" "2026\-06\-17" "Yay v13.0+" "Yay Manual"
+.TH "ilvpacman" "8" "2026\-06\-28" "ilvpacman v0.0.1" "ilvpacman Manual"
 .nh
 .ad l
 .SH NAME
-yay \- AUR Helper written in go
+ilvpacman \- AUR Helper written in go
 
 .SH SYNOPSIS
-\fIyay\fR <operation> [options] [targets]
+\fIilvpacman\fR <operation> [options] [targets]
 .sp
-\fIyay\fR <search terms>
+\fIilvpacman\fR <search terms>
 .sp
-\fIyay\fR
+\fIilvpacman\fR
 
 .SH DESCRIPTION
-Yay is a Pacman wrapper with AUR support. It passes options to Makepkg and
+ilvpacman is a Pacman wrapper with AUR support. It passes options to Makepkg and
 Pacman after resolving packages to install/upgrade.
 
-This manpage only covers options unique to Yay. For other options see
+This manpage only covers options unique to ilvpacman. For other options see
 \fBpacman(8)\fR.
 
-.SH YAY OPERATIONS
+.SH ilvpacman OPERATIONS
 
 .TP
-.B \-Y, \-\-yay
-Perform yay specific operations. This is the default if no other operation is
+.B \-Y, \-\-ilvpacman
+Perform ilvpacman specific operations. This is the default if no other operation is
 selected and targets are defined.
 
 .TP
@@ -31,7 +31,7 @@ Build a PKGBUILD in a given directory.
 
 .TP
 .B \-P, \-\-show
-Perform yay specific print operations.
+Perform ilvpacman specific print operations.
 
 .TP
 .B \-G, \-\-getpkgbuild
@@ -42,7 +42,7 @@ Downloads PKGBUILD from ABS or AUR. The ABS can only be used for Arch Linux repo
 Web related operations such as voting for AUR packages.
 
 .RE
-If no operation is specified 'yay \-Syu' will be performed
+If no operation is specified 'ilvpacman \-Syu' will be performed
 
 If no operation is specified and targets are provided \-Y will be assumed
 
@@ -53,13 +53,13 @@ These operations are extended to support both AUR and repo packages.
 
 .TP
 .B \-Sc
-Yay will also clean cached AUR package and any untracked Files in the
+ilvpacman will also clean cached AUR package and any untracked Files in the
 cache. Cleaning untracked files will wipe any downloaded sources or
 built packages but will keep already downloaded vcs sources.
 
 .TP
 .B \-R
-Yay will also remove cached data about devel packages.
+ilvpacman will also remove cached data about devel packages.
 
 .SH NEW OPTIONS
 .TP
@@ -75,7 +75,7 @@ sysupgrade will only act on AUR packages.
 Note that dependency resolving will still act normally and include repository
 packages.
 
-.SH YAY OPTIONS (APPLY TO \-Y AND \-\-YAY)
+.SH ilvpacman OPTIONS (APPLY TO \-Y AND \-\-ilvpacman)
 
 .TP
 .B <NO OPTION>
@@ -89,9 +89,9 @@ through exact matching.
 .TP
 .B \-\-gendb
 Generate development package database. Tracks the latest commit for each
-development package, when there is a new commit Yay will know to update. This
+development package, when there is a new commit ilvpacman will know to update. This
 is done per package whenever a package is synced. This option should only be
-used when migrating to Yay from another AUR helper.
+used when migrating to ilvpacman from another AUR helper.
 
 .TP
 .B \-c, \-\-clean
@@ -109,11 +109,11 @@ and is not intended to be used directly by the user.
 
 .TP
 .B \-d, \-\-defaultconfig
-Print default yay configuration.
+Print default ilvpacman configuration.
 
 .TP
 .B \-g, \-\-currentconfig
-Print current yay configuration.
+Print current ilvpacman configuration.
 
 .TP
 .B \-s, \-\-stats
@@ -178,18 +178,18 @@ Set an alternative URL for the AUR /rpc endpoint.
 .TP
 .B \-\-builddir <dir>
 Directory to use for Building AUR Packages. This directory is also used as
-the AUR cache when deciding if Yay should skip builds.
+the AUR cache when deciding if ilvpacman should skip builds.
 
 .TP
 .B \-\-editor <command>
 Editor to use when editing PKGBUILDs. If this is not set the \fBVISUAL\fR
 environment variable will be checked, followed by \fBEDITOR\fR. If none of
-these are set Yay will prompt the user for an editor.
+these are set ilvpacman will prompt the user for an editor.
 
 .TP
 .B \-\-editorflags <flags>
 Passes arguments to the editor. These flags get passed to every instance where
-the editor is called by Yay. Arguments are split on whitespace before being
+the editor is called by ilvpacman. Arguments are split on whitespace before being
 passed to the editor. Multiple arguments may be passed by supplying a space
 separated list that is quoted by the shell.
 
@@ -211,7 +211,7 @@ The command to use for \fBgit\fR calls. This can be a command in
 .TP
 .B \-\-gitflags <flags>
 Passes arguments to git. These flags get passed to every instance where
-git is called by yay. Arguments are split on whitespace before being
+git is called by ilvpacman. Arguments are split on whitespace before being
 passed to git. Multiple arguments may be passed by supplying a space
 separated list that is quoted by the shell.
 
@@ -297,7 +297,7 @@ Unset the answer for the upgrade menu.
 .TP
 .B \-\-cleanmenu
 Show the clean menu. This menu gives you the chance to fully delete the
-downloaded build files from Yay's cache before redownloading a fresh copy.
+downloaded build files from ilvpacman's cache before redownloading a fresh copy.
 
 If 'cleanmenu' is enabled in the configuration file, you can temporarily disable it by
 using '--cleanmenu=false' on the command line
@@ -316,7 +316,7 @@ less by default. This behaviour can be changed via git's config, the
 Show the edit menu. This menu gives you the option to edit or view PKGBUILDs
 before building.
 
-\fBWarning\fR: Yay resolves dependencies ahead of time via the RPC. It is not
+\fBWarning\fR: ilvpacman resolves dependencies ahead of time via the RPC. It is not
 recommended to edit pkgbuild variables unless you know what you are doing.
 
 .TP
@@ -363,7 +363,7 @@ compared against the hash at install time. This allows devel updates to be
 checked almost instantly and not require the original pkgbuild to be downloaded.
 
 The slower pacaur-like devel checks can be implemented manually by piping
-a list of packages into yay (see \fBexamples\fR).
+a list of packages into ilvpacman (see \fBexamples\fR).
 
 If 'devel' is enabled in the configuration file, you can temporarily disable it by
 using '--devel=false' on the command line
@@ -411,20 +411,20 @@ PKGBUILD.
 
 .TP
 .B \-\-useask
-Use pacman's --ask flag to automatically confirm package conflicts. Yay lists
-conflicts ahead of time. It is possible that Yay does not detect
+Use pacman's --ask flag to automatically confirm package conflicts. ilvpacman lists
+conflicts ahead of time. It is possible that ilvpacman does not detect
 a conflict, causing a package to be removed without the user's confirmation.
 However, this is very unlikely.
 
 .TP
 .B \-\-combinedupgrade
-During sysupgrade, Yay will first perform a refresh, then show
+During sysupgrade, ilvpacman will first perform a refresh, then show
 its combined menu of repo and AUR packages that will be upgraded. Then after
 reviewing the pkgbuilds, the repo and AUR upgrade will start with no need
 for manual intervention.
 
-If Yay exits for any reason After the refresh without upgrading. It is then
-the user's responsibility to either resolve the reason Yay exited or run
+If ilvpacman exits for any reason After the refresh without upgrading. It is then
+the user's responsibility to either resolve the reason ilvpacman exited or run
 a sysupgrade through pacman directly.
 
 .TP
@@ -458,14 +458,14 @@ to the one wanted skip the package build and use the existing package.
 .TP
 .B \-\-mflags <flags>
 Passes arguments to makepkg. These flags get passed to every instance where
-makepkg is called by Yay. Arguments are split on whitespace before being
+makepkg is called by ilvpacman. Arguments are split on whitespace before being
 passed to makepkg. Multiple arguments may be passed by supplying a space
 separated list that is quoted by the shell.
 
 .TP
 .B \-\-gpgflags <flags>
 Passes arguments to gpg. These flags get passed to every instance where
-gpg is called by Yay. Arguments are split on whitespace before being
+gpg is called by ilvpacman. Arguments are split on whitespace before being
 passed to gpg. Multiple arguments may be passed by supplying a space
 separated list that is quoted by the shell.
 
@@ -478,7 +478,7 @@ The sudoloop is not guaranteed to work with a custom \fBsudo\fR command.
 .TP
 .B \-\-sudoflags <flags>
 Passes arguments to sudo. These flags get passed to every instance where
-sudo is called by Yay. Arguments are split on whitespace before being
+sudo is called by ilvpacman. Arguments are split on whitespace before being
 passed to sudo. Multiple arguments may be passed by supplying a space
 separated list that is quoted by the shell.
 
@@ -489,43 +489,43 @@ builds.
 
 .SH EXAMPLES
 .TP
-yay \fIfoo\fR
+ilvpacman \fIfoo\fR
 Search and install from the repos and the \fBAUR\fR\ using yogurt mode.
 
 .TP
-yay \-Syu
+ilvpacman \-Syu
 Update package list and upgrade all currently installed repo and \fBAUR\fR.
 
 .TP
-yay \-Sua
+ilvpacman \-Sua
 Update all currently installed \fBAUR\fR packages.
 
 .TP
-yay \-S \fIfoo\fR
+ilvpacman \-S \fIfoo\fR
 Installs package \fIfoo\fR from the repos or the \fBAUR\fR.
 
 .TP
-yay \-Ss \fIfoo\fR
+ilvpacman \-Ss \fIfoo\fR
 Searches for package \fIfoo\fR on the repos or the \fBAUR\fR.
 
 .TP
-yay \-Si \fIfoo\fR
+ilvpacman \-Si \fIfoo\fR
 Gets information about package \fIfoo\fR from the repos or the \fBAUR\fR.
 
 .TP
-yay \-S \fIfoo\fR \-\-mflags "\-\-skipchecksums \-\-skippgpcheck"
+ilvpacman \-S \fIfoo\fR \-\-mflags "\-\-skipchecksums \-\-skippgpcheck"
 Installs \fIfoo\fR while skipping checksums and pgp checks.
 
 .TP
-yay \-\-devel \-\-save
+ilvpacman \-\-devel \-\-save
 Sets devel to true in the config.
 
 .TP
-yay \-P \-\-stats
+ilvpacman \-P \-\-stats
 Shows statistics for installed packages and system health.
 
 .TP
-pacman -Qmq | grep -Ee '-(cvs|svn|git|hg|bzr|darcs)$' | yay -S --needed -
+pacman -Qmq | grep -Ee '-(cvs|svn|git|hg|bzr|darcs)$' | ilvpacman -S --needed -
 pacaur-like devel check.
 
 .SH ENVIRONMENT VARIABLES
@@ -543,12 +543,12 @@ to use when editing PKGBUILDS.
 .SH FILES
 .TP
 .B CONFIG DIRECTORY
-The config directory is \fI$XDG_CONFIG_HOME/yay/\fR. If
+The config directory is \fI$XDG_CONFIG_HOME/ilvpacman/\fR. If
 \fB$XDG_CONFIG_HOME\fR is unset, the config directory will fall back to
-\fI$HOME/.config/yay\fR.
+\fI$HOME/.config/ilvpacman\fR.
 
-\fIconfig.json\fR Is used to store all of Yay's config options. Editing
-this file should be done through Yay, using the options
+\fIconfig.json\fR Is used to store all of ilvpacman's config options. Editing
+this file should be done through ilvpacman, using the options
 mentioned in \fBPERMANENT CONFIGURATION SETTINGS\fR.
 
 \fIinit.lua\fR can set Lua configuration options and define Lua hooks, such as
@@ -556,9 +556,9 @@ pre-install hooks for AUR PKGBUILDs. See \fIdoc/lua.md\fR for the Lua API.
 
 .TP
 .B CACHE DIRECTORY
-The cache directory is \fI$XDG_CACHE_HOME/yay/\fR. If
+The cache directory is \fI$XDG_CACHE_HOME/ilvpacman/\fR. If
 \fB$XDG_CACHE_HOME\fR is unset, the cache directory will fall back to
-\fI$HOME/.cache/yay\fR.
+\fI$HOME/.cache/ilvpacman\fR.
 
 \fIcompletion.cache\fR holds a list of of all packages, including the AUR,
 for shell completion. By default the completion files are refreshed every
@@ -575,8 +575,8 @@ and built packages from those packages.
 
 .TP
 .B PACMAN.CONF
-Yay uses Pacman's config file to set certain pacman options either through
-go\-alpm or Yay itself. Options inherited include most libalpm options and
+ilvpacman uses Pacman's config file to set certain pacman options either through
+go\-alpm or ilvpacman itself. Options inherited include most libalpm options and
 pacman options.
 
 Notably: \fBDatabases\fR, \fBColor\fR and \fB*Path/*Dir\fR options are used.
@@ -591,7 +591,7 @@ Notably: \fBDatabases\fR, \fBColor\fR and \fB*Path/*Dir\fR options are used.
 See the arch wiki at https://wiki.archlinux.org/index.php/Arch_User_Repository for more info on the \fBAUR\fR.
 
 .SH BUGS
-Please report bugs to our GitHub page https://github.com/Jguer/yay
+Please report bugs to our GitHub page https://github.com/Jguer/ilvpacman
 
 .SH AUTHORS
 Jguer <joguer@proton.me>
