@@ -73,10 +73,11 @@ docker-build:
 	docker cp ilvpacman-$(ARCH):/app/${BIN} ./${BIN}
 .PHONY: docker-release
 docker-release: docker-build
-	mkdir -p ilvpacman_refs/heads/
-	docker cp ilvpacman-$(ARCH):/app/ilvpacman_refs/heads/$(PACKAGE) ilvpacman_refs/heads/
+	@echo "Đang lấy file $(PACKAGE) từ container..."
+	mkdir -p ./dist
+	docker cp ilvpacman-$(ARCH):/app/$(PACKAGE) ./dist/
 	docker rm -f ilvpacman-$(ARCH)
-	cp ilvpacman_refs/heads/$(PACKAGE) ./
+	cp ./dist/$(PACKAGE) ./
 .PHONY: docker-release-all
 docker-release-all:
 	$(MAKE) docker-release ARCH=armv7h
