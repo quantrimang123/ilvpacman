@@ -119,8 +119,8 @@ uninstall:
 .PHONY: package
 package: build
 	@echo "Đang chuẩn bị gói hàng..."
-	 mkdir -p $(RELEASE_DIR)$(PREFIX)/bin
-    cp $(BIN) $(RELEASE_DIR)$(PREFIX)/bin/
+	mkdir -p $(RELEASE_DIR)$(PREFIX)/bin
+	cp $(BIN) $(RELEASE_DIR)$(PREFIX)/bin/
     tar -czvf $(PACKAGE) -C $(RELEASE_DIR) .
     rm -rf $(RELEASE_DIR)
 	@echo "Đã đóng gói xong thành: $(PACKAGE)"
