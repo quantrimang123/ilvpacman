@@ -1,0 +1,30 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*' 
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: Build Binary
+        run: go build -o ilvpacman .
+
+      - name: Create Package
+        run: |
+          mkdir -p package/usr/bin
+          cp ilvpacman package/usr/bin/
+          tar -czvf ilvpacman-${{ github.ref_name }}.tar.gz -C package .
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ilvpacman-*.tar.gz
