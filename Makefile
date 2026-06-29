@@ -69,7 +69,7 @@ release: $(PACKAGE)
 docker-build:
 	-docker rm -f ilvpacman-$(ARCH) 2>/dev/null
 	docker build -t ilvpacman:${ARCH} .
-	docker run --name ilvpacman-$(ARCH) ilvpacman:${ARCH} make build VERSION=${VERSION} PREFIX=${PREFIX} ARCH=${ARCH}
+	docker run --name ilvpacman-$(ARCH) ilvpacman:${ARCH} make release VERSION=${VERSION} PREFIX=${PREFIX} ARCH=${ARCH}
 	docker cp ilvpacman-$(ARCH):/app/${BIN} ./${BIN}
 .PHONY: docker-release
 docker-release: docker-build
@@ -111,18 +111,19 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/share/bash-completion/completions/${PKGNAME}
 	rm -f $(DESTDIR)$(PREFIX)/share/zsh/site-functions/_${PKGNAME}
 	rm -f $(DESTDIR)$(PREFIX)/share/fish/vendor_completions.d/${PKGNAME}.fish
-	rm -f $(DESTDIR)$(PREFIX)/share/${PKGNAME}/meta/yay.d.lua
+	rm -f $(DESTDIR)$(PREFIX)/share/${PKGNAME}/meta/ilvpacman.d.lua
 	for lang in ${LANGS}; do \
 		rm -f $(DESTDIR)$(PREFIX)/share/locale/$$lang/LC_MESSAGES/${PKGNAME}.mo; \
 	done
 
-$(RELEASE_DIR):
-	mkdir -p $(RELEASE_DIR)
-
-$(PACKAGE): $(BIN) $(RELEASE_DIR) ${MOFILES}
-	strip ${BIN}
-	cp -t $(RELEASE_DIR) ${BIN} doc/${PKGNAME}.8 completions/* ${MOFILES}
-	tar -czvf $(PACKAGE) $(RELEASE_DIR)
+.PHONY: package
+package: build
+	@echo "Đang chuẩn bị gói hàng..."
+	 mkdir -p $(RELEASE_DIR)$(PREFIX)/bin
+    cp $(BIN) $(RELEASE_DIR)$(PREFIX)/bin/
+    tar -czvf $(PACKAGE) -C $(RELEASE_DIR) .
+    rm -rf $(RELEASE_DIR)
+	@echo "Đã đóng gói xong thành: $(PACKAGE)"
 
 locale:
 	xgotext -in . -out po
